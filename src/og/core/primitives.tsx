@@ -60,6 +60,7 @@ export function Text({ x, y, lines, font, size, lh = 1.1, tracking = 0, anchor =
       textAnchor={anchor === 'start' ? undefined : anchor}
       fill={fill}
       opacity={opacity}
+      xmlSpace="preserve"
       {...rest}
     >
       {list.length === 1

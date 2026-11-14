@@ -1,0 +1,731 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "opengraphcn",
+  "homepage": "https://arjunkshah12345-hash.github.io/opengraphcn",
+  "items": [
+    {
+      "name": "core",
+      "type": "registry:component",
+      "title": "opengraphcn core",
+      "description": "Shared types, font metrics, deterministic text layout, SVG primitives and the browser PNG/SVG exporter.",
+      "dependencies": [
+        "react-dom"
+      ],
+      "files": [
+        {
+          "path": "src/og/core/export.ts",
+          "type": "registry:component",
+          "target": "components/opengraphcn/core/export.ts"
+        },
+        {
+          "path": "src/og/core/fonts.ts",
+          "type": "registry:component",
+          "target": "components/opengraphcn/core/fonts.ts"
+        },
+        {
+          "path": "src/og/core/kit.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/core/kit.tsx"
+        },
+        {
+          "path": "src/og/core/outline.ts",
+          "type": "registry:component",
+          "target": "components/opengraphcn/core/outline.ts"
+        },
+        {
+          "path": "src/og/core/primitives.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/core/primitives.tsx"
+        },
+        {
+          "path": "src/og/core/render.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/core/render.tsx"
+        },
+        {
+          "path": "src/og/core/text.ts",
+          "type": "registry:component",
+          "target": "components/opengraphcn/core/text.ts"
+        },
+        {
+          "path": "src/og/core/types.ts",
+          "type": "registry:component",
+          "target": "components/opengraphcn/core/types.ts"
+        },
+        {
+          "path": "src/og/core/utils.ts",
+          "type": "registry:component",
+          "target": "components/opengraphcn/core/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "server",
+      "type": "registry:component",
+      "title": "opengraphcn server renderer",
+      "description": "renderOgPng / renderOgSvg for Next.js opengraph-image routes and Node scripts (fontkit + resvg).",
+      "dependencies": [
+        "@resvg/resvg-js",
+        "fontkit"
+      ],
+      "devDependencies": [
+        "@types/fontkit"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/server/render.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/server/render.tsx"
+        }
+      ]
+    },
+    {
+      "name": "monograph",
+      "type": "registry:component",
+      "title": "Monograph (opengraphcn)",
+      "description": "Large serif headline on warm ivory with issue numbering, fine rules and editorial metadata.",
+      "categories": [
+        "og-image",
+        "editorial"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/monograph.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/monograph.tsx"
+        }
+      ]
+    },
+    {
+      "name": "journal",
+      "type": "registry:component",
+      "title": "The Journal (opengraphcn)",
+      "description": "A broadsheet front page: blackletter masthead, column rules, drop cap and a Bodoni headline.",
+      "categories": [
+        "og-image",
+        "editorial"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/journal.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/journal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "modernist",
+      "type": "registry:component",
+      "title": "Modernist (opengraphcn)",
+      "description": "Swiss six-column grid, heavy grotesk headline, red signal shapes and a structured metadata stack.",
+      "categories": [
+        "og-image",
+        "editorial"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/modernist.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/modernist.tsx"
+        }
+      ]
+    },
+    {
+      "name": "type-study",
+      "type": "registry:component",
+      "title": "Type Study (opengraphcn)",
+      "description": "Your project name as an oversized, cropped specimen with an offset outline and italic headline.",
+      "categories": [
+        "og-image",
+        "editorial"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/type-study.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/type-study.tsx"
+        }
+      ]
+    },
+    {
+      "name": "cover",
+      "type": "registry:component",
+      "title": "The Cover (opengraphcn)",
+      "description": "Magazine cover: towering Didone masthead, italic cover line, sticker badge and a barcode.",
+      "categories": [
+        "og-image",
+        "editorial"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/cover.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/cover.tsx"
+        }
+      ]
+    },
+    {
+      "name": "terminal",
+      "type": "registry:component",
+      "title": "Terminal (opengraphcn)",
+      "description": "A calm terminal window: real prompt, install command, block cursor and a vim-style status line.",
+      "categories": [
+        "og-image",
+        "developer"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/terminal.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/terminal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "codebase",
+      "type": "registry:component",
+      "title": "Codebase (opengraphcn)",
+      "description": "Your headline as a doc-comment in a light editor, with line numbers and a real config object.",
+      "categories": [
+        "og-image",
+        "developer"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/codebase.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/codebase.tsx"
+        }
+      ]
+    },
+    {
+      "name": "git-commit",
+      "type": "registry:component",
+      "title": "Git Commit (opengraphcn)",
+      "description": "A commit log entry with branch graph, ref labels, author line and your headline as the message.",
+      "categories": [
+        "og-image",
+        "developer"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/git-commit.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/git-commit.tsx"
+        }
+      ]
+    },
+    {
+      "name": "blueprint",
+      "type": "registry:component",
+      "title": "Blueprint (opengraphcn)",
+      "description": "Drafting sheet with grid, zone markers, a dimensioned headline, schematic and a title block.",
+      "categories": [
+        "og-image",
+        "developer"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/blueprint.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/blueprint.tsx"
+        }
+      ]
+    },
+    {
+      "name": "system",
+      "type": "registry:component",
+      "title": "System (opengraphcn)",
+      "description": "Architecture-diagram language: dot grid, connected service nodes, arrows and technical labels.",
+      "categories": [
+        "og-image",
+        "developer"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/system.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/system.tsx"
+        }
+      ]
+    },
+    {
+      "name": "atmosphere",
+      "type": "registry:component",
+      "title": "Atmosphere (opengraphcn)",
+      "description": "Soft, blurred colour fields with grain and a centred, softly weighted serif headline.",
+      "categories": [
+        "og-image",
+        "abstract"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/atmosphere.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/atmosphere.tsx"
+        }
+      ]
+    },
+    {
+      "name": "liquid",
+      "type": "registry:component",
+      "title": "Liquid (opengraphcn)",
+      "description": "Flowing, layered ribbons of colour with glossy highlights rising across a deep ground.",
+      "categories": [
+        "og-image",
+        "abstract"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/liquid.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/liquid.tsx"
+        }
+      ]
+    },
+    {
+      "name": "chromatic",
+      "type": "registry:component",
+      "title": "Chromatic (opengraphcn)",
+      "description": "An iridescent ring and pearl sphere with specular highlights on a cool pearl ground.",
+      "categories": [
+        "og-image",
+        "abstract"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/chromatic.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/chromatic.tsx"
+        }
+      ]
+    },
+    {
+      "name": "nocturne",
+      "type": "registry:component",
+      "title": "Nocturne (opengraphcn)",
+      "description": "Near-black night with a luminous eclipse, faint stars and a refined Garamond headline.",
+      "categories": [
+        "og-image",
+        "abstract"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/nocturne.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/nocturne.tsx"
+        }
+      ]
+    },
+    {
+      "name": "spectrum",
+      "type": "registry:component",
+      "title": "Spectrum (opengraphcn)",
+      "description": "Vertical bands of shifting colour with grain and a towering condensed headline.",
+      "categories": [
+        "og-image",
+        "abstract"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/spectrum.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/spectrum.tsx"
+        }
+      ]
+    },
+    {
+      "name": "nothing",
+      "type": "registry:component",
+      "title": "Nothing (opengraphcn)",
+      "description": "An almost empty white canvas, one precisely set headline and a single point of colour.",
+      "categories": [
+        "og-image",
+        "minimal"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/nothing.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/nothing.tsx"
+        }
+      ]
+    },
+    {
+      "name": "index",
+      "type": "registry:component",
+      "title": "Index (opengraphcn)",
+      "description": "A catalogue entry: numbered rows, fine rules, monospaced labels and a clear typographic hierarchy.",
+      "categories": [
+        "og-image",
+        "minimal"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/index-catalog.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/index-catalog.tsx"
+        }
+      ]
+    },
+    {
+      "name": "canvas",
+      "type": "registry:component",
+      "title": "Canvas (opengraphcn)",
+      "description": "A gallery wall: a framed work (your image or a colour-field painting) beside a museum label.",
+      "categories": [
+        "og-image",
+        "minimal"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/canvas.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/canvas.tsx"
+        }
+      ]
+    },
+    {
+      "name": "mono",
+      "type": "registry:component",
+      "title": "Mono (opengraphcn)",
+      "description": "One hue in disciplined tints: concentric quarter-circles, controlled weights and quiet alignment.",
+      "categories": [
+        "og-image",
+        "minimal"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/mono.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/mono.tsx"
+        }
+      ]
+    },
+    {
+      "name": "frame",
+      "type": "registry:component",
+      "title": "Frame (opengraphcn)",
+      "description": "A double-ruled frame with diamond corners around a centred, softly weighted serif headline.",
+      "categories": [
+        "og-image",
+        "minimal"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/frame.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/frame.tsx"
+        }
+      ]
+    },
+    {
+      "name": "brutalist",
+      "type": "registry:component",
+      "title": "Brutalist (opengraphcn)",
+      "description": "Edge-to-edge condensed capitals, a raw black header bar and a signal-orange information block.",
+      "categories": [
+        "og-image",
+        "experimental"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/brutalist.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/brutalist.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pixel",
+      "type": "registry:component",
+      "title": "Pixel (opengraphcn)",
+      "description": "A generated pixel sprite from your project name, pixel type, a segmented bar and scanlines.",
+      "categories": [
+        "og-image",
+        "experimental"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/pixel.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/pixel.tsx"
+        }
+      ]
+    },
+    {
+      "name": "dither",
+      "type": "registry:component",
+      "title": "Dither (opengraphcn)",
+      "description": "A procedurally lit sphere rendered with 8×8 ordered dithering, crisp 1-bit texture throughout.",
+      "categories": [
+        "og-image",
+        "experimental"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/dither.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/dither.tsx"
+        }
+      ]
+    },
+    {
+      "name": "halftone",
+      "type": "registry:component",
+      "title": "Halftone (opengraphcn)",
+      "description": "Two misregistered halftone screens build a printed sphere inside a ruled editorial page.",
+      "categories": [
+        "og-image",
+        "experimental"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/halftone.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/halftone.tsx"
+        }
+      ]
+    },
+    {
+      "name": "poster",
+      "type": "registry:component",
+      "title": "Poster (opengraphcn)",
+      "description": "A gig-poster composition: vertical giant name, colliding primary shapes and an off-axis headline.",
+      "categories": [
+        "og-image",
+        "experimental"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/poster.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/poster.tsx"
+        }
+      ]
+    },
+    {
+      "name": "launch",
+      "type": "registry:component",
+      "title": "Launch (opengraphcn)",
+      "description": "Launch-day card: spotlight, perspective floor, release pill, brand lock-up and a centred headline.",
+      "categories": [
+        "og-image",
+        "product"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/launch.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/launch.tsx"
+        }
+      ]
+    },
+    {
+      "name": "showcase",
+      "type": "registry:component",
+      "title": "Showcase (opengraphcn)",
+      "description": "A browser window that bleeds off the canvas: your screenshot, or a live mini landing page.",
+      "categories": [
+        "og-image",
+        "product"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/showcase.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/showcase.tsx"
+        }
+      ]
+    },
+    {
+      "name": "announcement",
+      "type": "registry:component",
+      "title": "Announcement (opengraphcn)",
+      "description": "Product update with an italic serif headline and a ticked release seal carrying version and date.",
+      "categories": [
+        "og-image",
+        "product"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/announcement.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/announcement.tsx"
+        }
+      ]
+    },
+    {
+      "name": "founder",
+      "type": "registry:component",
+      "title": "Founder (opengraphcn)",
+      "description": "A maker card: portrait (or monogram), name with a hand-drawn underline and a quoted tagline.",
+      "categories": [
+        "og-image",
+        "product"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/founder.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/founder.tsx"
+        }
+      ]
+    },
+    {
+      "name": "repository",
+      "type": "registry:component",
+      "title": "Repository (opengraphcn)",
+      "description": "A repository card with owner/name, description and real metadata — stars, forks and language when known.",
+      "categories": [
+        "og-image",
+        "product"
+      ],
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/repository.tsx",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/repository.tsx"
+        }
+      ]
+    },
+    {
+      "name": "all",
+      "type": "registry:component",
+      "title": "All opengraphcn templates",
+      "description": "Every template plus the index that lists them.",
+      "registryDependencies": [
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/monograph.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/journal.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/modernist.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/type-study.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/cover.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/terminal.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/codebase.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/git-commit.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/blueprint.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/system.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/atmosphere.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/liquid.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/chromatic.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/nocturne.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/spectrum.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/nothing.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/index.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/canvas.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/mono.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/frame.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/brutalist.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/pixel.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/dither.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/halftone.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/poster.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/launch.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/showcase.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/announcement.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/founder.json",
+        "https://arjunkshah12345-hash.github.io/opengraphcn/r/repository.json"
+      ],
+      "files": [
+        {
+          "path": "src/og/templates/index.ts",
+          "type": "registry:component",
+          "target": "components/opengraphcn/templates/index.ts"
+        }
+      ]
+    }
+  ]
+}

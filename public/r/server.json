@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "server",
+  "type": "registry:component",
+  "title": "opengraphcn server renderer",
+  "description": "renderOgPng / renderOgSvg for Next.js opengraph-image routes and Node scripts (fontkit + resvg).",
+  "dependencies": [
+    "@resvg/resvg-js",
+    "fontkit"
+  ],
+  "devDependencies": [
+    "@types/fontkit"
+  ],
+  "registryDependencies": [
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+  ],
+  "files": [
+    {
+      "path": "src/og/server/render.tsx",
+      "type": "registry:component",
+      "target": "components/opengraphcn/server/render.tsx",
+      "content": "import { Resvg } from '@resvg/resvg-js'\nimport * as fontkit from 'fontkit'\nimport { renderToStaticMarkup } from 'react-dom/server'\nimport { fontUrl } from '../core/fonts'\nimport { createOutliner, type FontkitLike } from '../core/outline'\nimport { OgRenderMode } from '../core/primitives'\nimport { OgImage, resolveFonts, type OgImageProps } from '../core/render'\nimport { resolveFace } from '../core/text'\nimport type { TemplateDef } from '../core/types'\n\n// Server-side PNG rendering for Next.js routes (Node runtime) or any Node script.\n// Same SVG as the browser; text is outlined with fontkit so resvg needs no fonts.\n\nconst fontCache = new Map<string, Promise<FontkitLike>>()\n\nasync function loadFace(family: string, weight: number, style: 'normal' | 'italic', slug: string): Promise<FontkitLike> {\n  const key = `${family}|${weight}|${style}`\n  if (!fontCache.has(key)) {\n    fontCache.set(\n      key,\n      fetch(fontUrl({ slug, weight, style }, 'ttf')).then(async (res) => {\n        if (!res.ok) throw new Error(`opengraphcn: could not load font ${key} (${res.status})`)\n        return fontkit.create(Buffer.from(await res.arrayBuffer())) as unknown as FontkitLike\n      }),\n    )\n  }\n  return fontCache.get(key)!.catch((e) => {\n    fontCache.delete(key)\n    throw e\n  })\n}\n\nasync function inlineImages(assets: OgImageProps['assets'] = {}) {\n  const out: Record<string, string | undefined> = {}\n  for (const [k, v] of Object.entries(assets)) {\n    if (!v || v.startsWith('data:')) {\n      out[k] = v\n      continue\n    }\n    const res = await fetch(v)\n    if (!res.ok) throw new Error(`opengraphcn: could not fetch image ${v} (${res.status})`)\n    const type = res.headers.get('content-type') ?? 'image/png'\n    out[k] = `data:${type};base64,${Buffer.from(await res.arrayBuffer()).toString('base64')}`\n  }\n  return out\n}\n\n/** render a template to an SVG string with outlined text */\nexport async function renderOgSvg(template: TemplateDef, props: OgImageProps = {}) {\n  const { FONT_FACES } = await import('../core/fonts')\n  const faces = Object.values(resolveFonts(template, props.options)).map((f) => resolveFace(f))\n  const fonts: Record<string, FontkitLike> = {}\n  await Promise.all(\n    faces.map(async (f) => {\n      const def = FONT_FACES.find((x) => x.family === f.family && x.weight === f.weight && x.style === f.style)\n      if (def) fonts[`${f.family}|${f.weight}|${f.style}`] = await loadFace(f.family, f.weight, f.style, def.slug)\n    }),\n  )\n  const assets = await inlineImages(props.assets)\n  return renderToStaticMarkup(\n    <OgRenderMode outline={createOutliner(fonts, Object.values(fonts)[0])}>\n      <OgImage template={template} id=\"og\" {...props} assets={assets} />\n    </OgRenderMode>,\n  )\n}\n\n/** render a template to a 1200×630 PNG (Uint8Array) */\nexport async function renderOgPng(template: TemplateDef, props: OgImageProps = {}, scale = 1): Promise<Uint8Array> {\n  const svg = await renderOgSvg(template, props)\n  const png = new Resvg(svg, { fitTo: { mode: 'width', value: 1200 * scale }, font: { loadSystemFonts: false } }).render().asPng()\n  return new Uint8Array(png)\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "frame",
+  "type": "registry:component",
+  "title": "Frame (opengraphcn)",
+  "description": "A double-ruled frame with diamond corners around a centred, softly weighted serif headline.",
+  "categories": [
+    "og-image",
+    "minimal"
+  ],
+  "registryDependencies": [
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+  ],
+  "files": [
+    {
+      "path": "src/og/templates/frame.tsx",
+      "type": "registry:component",
+      "target": "components/opengraphcn/templates/frame.tsx",
+      "content": "import { BlockText, blockCenter, blockTop, caps, join } from '../core/kit'\nimport { Frame, Text } from '../core/primitives'\nimport type { TemplateDef, TemplateProps } from '../core/types'\nimport { OgImage, type OgImageProps } from '../core/render'\n\nconst W = 1200\nconst H = 630\n/* ─────────────────────────── 20 · Frame ─────────────────────────── */\n\nfunction FrameTpl({ content: c, theme: t, options: o, fonts: f }: TemplateProps) {\n  const s = o.scale\n  const head = blockCenter(c.headline, { font: f.display, maxWidth: 860, maxLines: 3, max: 78 * s, min: 36, lineHeight: 1.02, tracking: -0.02, center: 286, maxHeight: 240 })\n  const desc = blockTop(c.description, { font: f.italic, maxWidth: 680, maxLines: 2, max: 24, min: 18, lineHeight: 1.35, top: head.bottom + 50 })\n  const corner = (x: number, y: number) => <rect key={`${x}-${y}`} x={x - 5} y={y - 5} width={10} height={10} fill={t.background} stroke={t.accent} strokeWidth={1.2} transform={`rotate(45 ${x} ${y})`} />\n  return (\n    <Frame background={t.background}>\n      <rect x={28} y={28} width={W - 56} height={H - 56} fill=\"none\" stroke={t.text} strokeWidth={1.4} />\n      <rect x={40} y={40} width={W - 80} height={H - 80} fill=\"none\" stroke={t.text} strokeOpacity={0.45} strokeWidth={0.8} />\n      {[corner(40, 40), corner(W - 40, 40), corner(40, H - 40), corner(W - 40, H - 40)]}\n      {o.showBrand ? <Text x={W / 2} y={112} anchor=\"middle\" lines={caps(c.name)} font={f.label} size={13} tracking={0.34} fill={t.text} /> : null}\n      <Text x={W / 2} y={head.y} anchor=\"middle\" lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.02} fill={t.text} />\n      <line x1={W / 2 - 28} x2={W / 2 + 28} y1={head.bottom + 22} y2={head.bottom + 22} stroke={t.accent} strokeWidth={1.4} />\n      <BlockText b={desc} x={W / 2} anchor=\"middle\" font={f.italic} fill={t.text} opacity={0.7} />\n      {o.showMeta ? <Text x={W / 2} y={H - 92} anchor=\"middle\" lines={caps(join([c.domain, c.date], '   ·   '))} font={f.label} size={12} tracking={0.28} fill={t.text} opacity={0.65} /> : null}\n    </Frame>\n  )\n}\n\nexport const frame: TemplateDef = {\n  id: 'frame',\n  number: 20,\n  name: 'Frame',\n  collection: 'minimal',\n  description: 'A double-ruled frame with diamond corners around a centred, softly weighted serif headline.',\n  fonts: {\n    display: { family: 'Fraunces', weight: 300 },\n    italic: { family: 'Fraunces', weight: 300, style: 'italic' },\n    label: { family: 'Inter Tight', weight: 600 },\n  },\n  theme: { primary: '#2b2620', accent: '#a0703f', background: '#f6f2ea', text: '#2b2620' },\n  limits: { headline: 60, description: 110 },\n  uses: ['date'],\n  render: FrameTpl,\n}\n\n/** <FrameImage /> renders the frame template as an SVG (1200×630). */\nexport function FrameImage(props: OgImageProps) {\n  return <OgImage template={frame} {...props} />\n}\n"
+    }
+  ]
+}

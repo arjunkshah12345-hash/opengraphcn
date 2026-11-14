@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "modernist",
+  "type": "registry:component",
+  "title": "Modernist (opengraphcn)",
+  "description": "Swiss six-column grid, heavy grotesk headline, red signal shapes and a structured metadata stack.",
+  "categories": [
+    "og-image",
+    "editorial"
+  ],
+  "registryDependencies": [
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+  ],
+  "files": [
+    {
+      "path": "src/og/templates/modernist.tsx",
+      "type": "registry:component",
+      "target": "components/opengraphcn/templates/modernist.tsx",
+      "content": "import { BlockText, blockBottom, blockTop, caps } from '../core/kit'\nimport { Frame, Text } from '../core/primitives'\nimport { fitLine } from '../core/text'\nimport type { TemplateDef, TemplateProps } from '../core/types'\nimport { OgImage, type OgImageProps } from '../core/render'\n\nconst W = 1200\nconst H = 630\n/* ─────────────────────────── 03 · Modernist ─────────────────────────── */\n\nfunction Modernist({ content: c, theme: t, options: o, fonts: f }: TemplateProps) {\n  const M = 64\n  const s = o.scale\n  const col = (W - 2 * M) / 6\n  const x2 = M + col * 2\n  const desc = c.description ? blockBottom(c.description, { font: f.body, maxWidth: 520, maxLines: 3, max: 21, min: 17, lineHeight: 1.36, bottom: 566 }) : null\n  const top = 136\n  const head = blockTop(c.headline, {\n    font: f.display,\n    maxWidth: W - M - x2,\n    maxLines: 4,\n    max: 98 * s,\n    min: 44,\n    lineHeight: 0.96,\n    tracking: -0.045,\n    top,\n    maxHeight: (desc ? desc.y - desc.size - 48 : 560) - top,\n  })\n  const meta = [\n    ['Project', c.name],\n    ['Category', c.category],\n    ['Date', c.date],\n    ['Domain', c.domain],\n  ].filter(([, v]) => v)\n  return (\n    <Frame background={t.background}>\n      {Array.from({ length: 7 }, (_, i) => (\n        <line key={i} x1={M + i * col} x2={M + i * col} y1={0} y2={H} stroke={t.text} strokeOpacity={0.07} />\n      ))}\n      <line x1={0} x2={W} y1={96} y2={96} stroke={t.text} strokeOpacity={0.07} />\n      <rect x={M} y={64} width={col * 2 - 24} height={14} fill={t.accent} />\n      <circle cx={W - M - 58} cy={H - 64 - 58} r={58} fill={t.accent} />\n      {o.showBrand ? <Text x={M} y={156} lines={c.name} font={f.display} size={24} tracking={-0.02} fill={t.text} /> : null}\n      <Text x={M} y={184} lines={c.badge} font={f.body} size={15} fill={t.text} opacity={0.5} />\n      <Text x={x2 - 4} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.045} fill={t.text} />\n      {desc ? <BlockText b={desc} x={x2} font={f.body} fill={t.text} opacity={0.8} /> : null}\n      {o.showMeta\n        ? meta.map(([k, v], i) => {\n            const y = 566 - (meta.length - 1 - i) * 54\n            return (\n              <g key={k}>\n                <Text x={M} y={y - 22} lines={caps(k)} font={f.body} size={11} tracking={0.16} fill={t.text} opacity={0.45} />\n                <Text x={M} y={y} lines={fitLine(v, f.label, 18, 12, col * 2 - 40).text} font={f.label} size={18} fill={t.text} />\n              </g>\n            )\n          })\n        : null}\n    </Frame>\n  )\n}\n\nexport const modernist: TemplateDef = {\n  id: 'modernist',\n  number: 3,\n  name: 'Modernist',\n  collection: 'editorial',\n  description: 'Swiss six-column grid, heavy grotesk headline, red signal shapes and a structured metadata stack.',\n  fonts: {\n    display: { family: 'Inter Tight', weight: 800 },\n    label: { family: 'Inter Tight', weight: 600 },\n    body: { family: 'Inter Tight', weight: 500 },\n  },\n  theme: { primary: '#111111', accent: '#e3241b', background: '#eeece6', text: '#111111' },\n  limits: { headline: 60, description: 140 },\n  uses: ['date', 'category', 'badge'],\n  render: Modernist,\n}\n\n/** <ModernistImage /> renders the modernist template as an SVG (1200×630). */\nexport function ModernistImage(props: OgImageProps) {\n  return <OgImage template={modernist} {...props} />\n}\n"
+    }
+  ]
+}

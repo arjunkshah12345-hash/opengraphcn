@@ -3,8 +3,8 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 // GitHub Pages serves the site from /opengraphcn/. Override with BASE_PATH for forks/custom domains.
-export default defineConfig(({ command }) => ({
-  base: command === 'build' ? (process.env.BASE_PATH ?? '/opengraphcn/') : '/',
+export default defineConfig(({ command, isPreview }) => ({
+  base: command === 'build' || isPreview ? (process.env.BASE_PATH ?? '/opengraphcn/') : '/',
   plugins: [react(), tailwindcss()],
   test: {
     environment: 'node',

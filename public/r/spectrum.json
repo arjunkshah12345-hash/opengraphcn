@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "spectrum",
+  "type": "registry:component",
+  "title": "Spectrum (opengraphcn)",
+  "description": "Vertical bands of shifting colour with grain and a towering condensed headline.",
+  "categories": [
+    "og-image",
+    "abstract"
+  ],
+  "registryDependencies": [
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/core.json"
+  ],
+  "files": [
+    {
+      "path": "src/og/templates/spectrum.tsx",
+      "type": "registry:component",
+      "target": "components/opengraphcn/templates/spectrum.tsx",
+      "content": "import { blockBottom, caps, join } from '../core/kit'\nimport { Frame, Grain, Text } from '../core/primitives'\nimport { ellipsize } from '../core/text'\nimport type { TemplateDef, TemplateProps } from '../core/types'\nimport { hash, hueShift, mix, rng } from '../core/utils'\nimport { OgImage, type OgImageProps } from '../core/render'\n\nconst W = 1200\nconst H = 630\n/* ─────────────────────────── 15 · Spectrum ─────────────────────────── */\n\nfunction Spectrum({ content: c, theme: t, options: o, fonts: f, uid }: TemplateProps) {\n  const s = o.scale\n  const rand = rng(hash('spectrum' + t.primary + t.accent))\n  const bands: { x: number; w: number; a: string; b: string }[] = []\n  let x = 0\n  let i = 0\n  while (x < W) {\n    const bw = 40 + Math.floor(rand() * 120)\n    const tt = i / 12\n    const a = mix(hueShift(t.primary, tt * 70 - 20), t.accent, (Math.sin(i * 1.7) + 1) * 0.25)\n    const b = mix(hueShift(t.accent, -tt * 60), t.background, 0.15 + rand() * 0.3)\n    bands.push({ x, w: bw, a, b })\n    x += bw\n    i++\n  }\n  const text = caps(c.headline)\n  const head = blockBottom(text, { font: f.display, maxWidth: W - 140, maxLines: 3, max: 150 * s, min: 56, lineHeight: 0.88, tracking: -0.01, bottom: H - 66, maxHeight: 400 })\n  return (\n    <Frame background={t.background}>\n      <defs>\n        {bands.map((b, k) => (\n          <linearGradient key={k} id={`${uid}-b${k}`} x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\n            <stop offset=\"0\" stopColor={b.a} />\n            <stop offset=\"1\" stopColor={b.b} />\n          </linearGradient>\n        ))}\n        <linearGradient id={`${uid}-shade`} x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\n          <stop offset=\"0.3\" stopColor={t.background} stopOpacity={0} />\n          <stop offset=\"1\" stopColor={t.background} stopOpacity={0.75} />\n        </linearGradient>\n      </defs>\n      {bands.map((b, k) => (\n        <rect key={k} x={b.x} y={0} width={b.w + 1} height={H} fill={`url(#${uid}-b${k})`} />\n      ))}\n      {bands.map((b, k) => (k % 3 === 0 ? <line key={`l${k}`} x1={b.x} x2={b.x} y1={0} y2={H} stroke=\"#ffffff\" strokeOpacity={0.25} /> : null))}\n      <rect width={W} height={H} fill={`url(#${uid}-shade)`} />\n      <Grain uid={uid} opacity={0.18} blend=\"overlay\" />\n      {o.showBrand ? <Text x={70} y={80} lines={caps(c.name)} font={f.mono} size={14} tracking={0.22} fill={t.text} /> : null}\n      {o.showMeta ? <Text x={W - 70} y={80} anchor=\"end\" lines={caps(join([c.badge, c.domain], '  /  '))} font={f.mono} size={14} tracking={0.22} fill={t.text} /> : null}\n      <Text x={66} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.01} fill={t.text} />\n      {c.description && head.y - head.size > 160 ? (\n        <Text x={70} y={head.y - head.size - 10} lines={ellipsize(c.description, f.mono, 16, 620)} font={f.mono} size={16} fill={t.text} opacity={0.85} />\n      ) : null}\n    </Frame>\n  )\n}\n\nexport const spectrum: TemplateDef = {\n  id: 'spectrum',\n  number: 15,\n  name: 'Spectrum',\n  collection: 'abstract',\n  description: 'Vertical bands of shifting colour with grain and a towering condensed headline.',\n  fonts: {\n    display: { family: 'Big Shoulders Display', weight: 900 },\n    mono: { family: 'Geist Mono', weight: 500 },\n  },\n  theme: { primary: '#ff5e3a', accent: '#5b6cff', background: '#121016', text: '#ffffff' },\n  limits: { headline: 48, description: 80 },\n  uses: ['badge'],\n  render: Spectrum,\n}\n\n/** <SpectrumImage /> renders the spectrum template as an SVG (1200×630). */\nexport function SpectrumImage(props: OgImageProps) {\n  return <OgImage template={spectrum} {...props} />\n}\n"
+    }
+  ]
+}

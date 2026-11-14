@@ -1,0 +1,47 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "all",
+  "type": "registry:component",
+  "title": "All opengraphcn templates",
+  "description": "Every template plus the index that lists them.",
+  "registryDependencies": [
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/monograph.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/journal.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/modernist.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/type-study.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/cover.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/terminal.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/codebase.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/git-commit.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/blueprint.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/system.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/atmosphere.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/liquid.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/chromatic.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/nocturne.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/spectrum.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/nothing.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/index.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/canvas.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/mono.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/frame.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/brutalist.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/pixel.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/dither.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/halftone.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/poster.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/launch.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/showcase.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/announcement.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/founder.json",
+    "https://arjunkshah12345-hash.github.io/opengraphcn/r/repository.json"
+  ],
+  "files": [
+    {
+      "path": "src/og/templates/index.ts",
+      "type": "registry:component",
+      "target": "components/opengraphcn/templates/index.ts",
+      "content": "import type { TemplateDef } from '../core/types'\nimport { monograph } from './monograph'\nimport { journal } from './journal'\nimport { modernist } from './modernist'\nimport { typeStudy } from './type-study'\nimport { cover } from './cover'\nimport { terminal } from './terminal'\nimport { codebase } from './codebase'\nimport { gitCommit } from './git-commit'\nimport { blueprint } from './blueprint'\nimport { system } from './system'\nimport { atmosphere } from './atmosphere'\nimport { liquid } from './liquid'\nimport { chromatic } from './chromatic'\nimport { nocturne } from './nocturne'\nimport { spectrum } from './spectrum'\nimport { nothing } from './nothing'\nimport { index } from './index-catalog'\nimport { canvas } from './canvas'\nimport { mono } from './mono'\nimport { frame } from './frame'\nimport { brutalist } from './brutalist'\nimport { pixel } from './pixel'\nimport { dither } from './dither'\nimport { halftone } from './halftone'\nimport { poster } from './poster'\nimport { launch } from './launch'\nimport { showcase } from './showcase'\nimport { announcement } from './announcement'\nimport { founder } from './founder'\nimport { repository } from './repository'\n\n/** all 30 templates, in catalogue order */\nexport const TEMPLATES: TemplateDef[] = [\n  monograph,\n  journal,\n  modernist,\n  typeStudy,\n  cover,\n  terminal,\n  codebase,\n  gitCommit,\n  blueprint,\n  system,\n  atmosphere,\n  liquid,\n  chromatic,\n  nocturne,\n  spectrum,\n  nothing,\n  index,\n  canvas,\n  mono,\n  frame,\n  brutalist,\n  pixel,\n  dither,\n  halftone,\n  poster,\n  launch,\n  showcase,\n  announcement,\n  founder,\n  repository,\n]\n\nexport const getTemplate = (id: string) => TEMPLATES.find((t) => t.id === id) ?? TEMPLATES[0]\n"
+    }
+  ]
+}
