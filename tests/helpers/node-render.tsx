@@ -2,10 +2,10 @@ import fs from 'node:fs'
 import path from 'node:path'
 import * as fontkit from 'fontkit'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { renderToSvgString } from '../../src/og/core/markup'
 import { Resvg } from '@resvg/resvg-js'
 import { FONT_FACES } from '../../src/og/core/fonts'
 import { createOutliner, type FontkitLike } from '../../src/og/core/outline'
-import { OgRenderMode } from '../../src/og/core/primitives'
 import { OgImage, type OgImageProps } from '../../src/og/core/render'
 import type { TemplateDef } from '../../src/og/core/types'
 
@@ -23,14 +23,15 @@ export function getOutliner() {
 }
 
 export function renderOutlinedSvg(template: TemplateDef, props: OgImageProps = {}) {
-  return renderToStaticMarkup(
-    <OgRenderMode outline={getOutliner()}>
-      <OgImage template={template} id="t" {...props} />
-    </OgRenderMode>,
-  )
+  return renderToSvgString(<OgImage template={template} id="t" {...props} />, { outline: getOutliner() })
 }
 
 export function renderTextSvg(template: TemplateDef, props: OgImageProps = {}) {
+  return renderToSvgString(<OgImage template={template} id="t" {...props} />)
+}
+
+/** reference serializer, used to check renderToSvgString against React itself */
+export function renderTextSvgReact(template: TemplateDef, props: OgImageProps = {}) {
   return renderToStaticMarkup(<OgImage template={template} id="t" {...props} />)
 }
 

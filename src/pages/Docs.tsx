@@ -154,13 +154,13 @@ function NextGuide() {
       </P>
       <CodeBlock lang="bash" code={`npx shadcn@latest add ${REGISTRY_URL}/monograph.json ${REGISTRY_URL}/server.json`} />
       <P>
-        Keep the native module external in <C>next.config.ts</C>:
+        Keep the native renderer (and fontkit, which reads data files at runtime) external in <C>next.config.ts</C>:
       </P>
       <CodeBlock
         code={`import type { NextConfig } from 'next'
 
 const config: NextConfig = {
-  serverExternalPackages: ['@resvg/resvg-js'],
+  serverExternalPackages: ['@resvg/resvg-js', 'fontkit'],
 }
 export default config`}
       />
@@ -203,7 +203,7 @@ function ExportsDoc() {
       <H1>Exports</H1>
       <H2>PNG</H2>
       <P>
-        The template is rendered to a standalone SVG string (React’s static renderer), every font face it uses is embedded as a base64 <C>@font-face</C>, remote images are inlined, and the SVG is drawn onto a 1200×630 canvas (or 2400×1260 for @2x). The result is a real PNG with no transparent edges and no screenshot of the interface.
+        The template is rendered to a standalone SVG string by a tiny hook-free serializer (it also runs in React Server Components), every font face it uses is embedded as a base64 <C>@font-face</C>, remote images are inlined, and the SVG is drawn onto a 1200×630 canvas (or 2400×1260 for @2x). The result is a real PNG with no transparent edges and no screenshot of the interface.
       </P>
       <H2>SVG</H2>
       <P>The same standalone SVG, downloaded directly. Fonts and images are embedded, so the file renders correctly in browsers and design tools without network access.</P>

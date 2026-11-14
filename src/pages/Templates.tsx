@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import { CodeBlock } from '../components/Code'
 import { OgFrame, OgPreview } from '../components/OgPreview'
 import { Button, CopyButton, LinkButton, cn, useToast } from '../components/ui'
-import { componentName } from '../lib/codegen'
+import { componentName, templateFile } from '../lib/codegen'
 import { defaultConfig } from '../lib/config'
 import { href } from '../lib/router'
 import { installCommand } from '../lib/site'
@@ -72,7 +72,7 @@ export function TemplateDetail({ id }: { id: string }) {
   const next = TEMPLATES[(idx + 1) % TEMPLATES.length]
   const col = COLLECTIONS.find((c) => c.id === t.collection)!
   const fonts = [...new Set(Object.values(t.fonts).map((f) => `${f.family}${f.style === 'italic' ? ' Italic' : ''}`))]
-  const usage = `import { ${componentName(t.id)} } from '@/components/opengraphcn/templates/${t.id}'
+  const usage = `import { ${componentName(t.id)} } from '@/components/opengraphcn/templates/${templateFile(t.id)}'
 
 <${componentName(t.id)}
   content={{ name: 'Acme', headline: 'Build something remarkable.' }}

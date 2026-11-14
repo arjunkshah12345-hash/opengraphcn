@@ -1,5 +1,6 @@
-import { cloneElement, useId, type CSSProperties, type ReactElement } from 'react'
+import { cloneElement, type CSSProperties, type ReactElement } from 'react'
 import { resolveFace } from './text'
+import { hash } from './utils'
 import {
   DEFAULT_CONTENT,
   DEFAULT_OPTIONS,
@@ -19,7 +20,7 @@ export interface OgImageProps {
   options?: Partial<OgOptions>
   className?: string
   style?: CSSProperties
-  /** stable id prefix; defaults to React useId */
+  /** id prefix for gradients/filters; defaults to a hash of the props (hook-free, RSC-safe) */
   id?: string
 }
 
@@ -54,8 +55,7 @@ function stripEmpty<T extends object>(o: T | undefined): Partial<T> {
 }
 
 export function OgImage({ template, ...props }: OgImageProps & { template: TemplateDef }) {
-  const reactId = useId()
-  const uid = (props.id ?? `og${reactId}`).replace(/[^a-zA-Z0-9_-]/g, '')
+  const uid = (props.id ?? `og-${template.id}-${hash(JSON.stringify([props.content, props.theme, props.options, props.assets && Object.keys(props.assets)])).toString(36)}`).replace(/[^a-zA-Z0-9_-]/g, '')
   const el = template.render(resolveProps(template, props, uid)) as ReactElement<Record<string, unknown>>
   return cloneElement(el, {
     className: props.className,

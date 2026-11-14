@@ -1,18 +1,19 @@
-import { createContext, useContext, type ReactNode, type SVGProps } from 'react'
+import type { ReactNode, SVGProps } from 'react'
 import { measure, resolveFace } from './text'
 import { OG_HEIGHT, OG_WIDTH, type FontRef } from './types'
 
 /**
  * Text can render as live <text> (browser preview, SVG/PNG export with embedded fonts)
  * or as outlined glyph paths (server renderers such as resvg, where font-family matching
- * is unreliable). Provide an outliner through <OgRenderMode> to switch.
+ * is unreliable). Pass an outliner to renderToSvgString to switch.
  */
 export type Outliner = (args: { text: string; font: Required<FontRef>; size: number; tracking: number; x: number; y: number }) => string
 
-const RenderModeContext = createContext<Outliner | null>(null)
+let activeOutliner: Outliner | null = null
 
-export function OgRenderMode({ outline, children }: { outline: Outliner | null; children: ReactNode }) {
-  return <RenderModeContext.Provider value={outline}>{children}</RenderModeContext.Provider>
+/** set by renderToSvgString for the duration of a synchronous render */
+export function setOutliner(o: Outliner | null) {
+  activeOutliner = o
 }
 
 export interface TextProps extends Omit<SVGProps<SVGTextElement>, 'x' | 'y' | 'fontSize'> {
@@ -31,7 +32,7 @@ export interface TextProps extends Omit<SVGProps<SVGTextElement>, 'x' | 'y' | 'f
 }
 
 export function Text({ x, y, lines, font, size, lh = 1.1, tracking = 0, anchor = 'start', fill = '#000', opacity, ...rest }: TextProps) {
-  const outline = useContext(RenderModeContext)
+  const outline = activeOutliner
   const list = typeof lines === 'string' ? [lines] : lines
   const face = resolveFace(font)
   const r = (n: number) => Math.round(n * 100) / 100

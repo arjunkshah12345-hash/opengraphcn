@@ -1,9 +1,8 @@
 import { Resvg } from '@resvg/resvg-js'
 import * as fontkit from 'fontkit'
-import { renderToStaticMarkup } from 'react-dom/server'
-import { fontUrl } from '../core/fonts'
+import { FONT_FACES, fontUrl } from '../core/fonts'
 import { createOutliner, type FontkitLike } from '../core/outline'
-import { OgRenderMode } from '../core/primitives'
+import { renderToSvgString } from '../core/markup'
 import { OgImage, resolveFonts, type OgImageProps } from '../core/render'
 import { resolveFace } from '../core/text'
 import type { TemplateDef } from '../core/types'
@@ -47,7 +46,6 @@ async function inlineImages(assets: OgImageProps['assets'] = {}) {
 
 /** render a template to an SVG string with outlined text */
 export async function renderOgSvg(template: TemplateDef, props: OgImageProps = {}) {
-  const { FONT_FACES } = await import('../core/fonts')
   const faces = Object.values(resolveFonts(template, props.options)).map((f) => resolveFace(f))
   const fonts: Record<string, FontkitLike> = {}
   await Promise.all(
@@ -57,16 +55,12 @@ export async function renderOgSvg(template: TemplateDef, props: OgImageProps = {
     }),
   )
   const assets = await inlineImages(props.assets)
-  return renderToStaticMarkup(
-    <OgRenderMode outline={createOutliner(fonts, Object.values(fonts)[0])}>
-      <OgImage template={template} id="og" {...props} assets={assets} />
-    </OgRenderMode>,
-  )
+  return renderToSvgString(<OgImage template={template} id="og" {...props} assets={assets} />, { outline: createOutliner(fonts, Object.values(fonts)[0]) })
 }
 
 /** render a template to a 1200×630 PNG (Uint8Array) */
-export async function renderOgPng(template: TemplateDef, props: OgImageProps = {}, scale = 1): Promise<Uint8Array> {
+export async function renderOgPng(template: TemplateDef, props: OgImageProps = {}, scale = 1): Promise<Uint8Array<ArrayBuffer>> {
   const svg = await renderOgSvg(template, props)
   const png = new Resvg(svg, { fitTo: { mode: 'width', value: 1200 * scale }, font: { loadSystemFonts: false } }).render().asPng()
-  return new Uint8Array(png)
+  return Uint8Array.from(png)
 }

@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react'
-import { renderToStaticMarkup } from 'react-dom/server'
 import { fontUrl, FONT_FACES } from './fonts'
+import { renderToSvgString } from './markup'
 import { OG_HEIGHT, OG_WIDTH } from './types'
 
 // Browser export pipeline: React SVG -> standalone SVG string (fonts + images embedded)
@@ -56,7 +56,7 @@ export interface SvgExportOptions {
 
 /** render an <OgImage/> element into a fully self-contained SVG document */
 export async function renderSvg(element: ReactElement, opts: SvgExportOptions = {}): Promise<string> {
-  let svg = renderToStaticMarkup(element)
+  let svg = renderToSvgString(element)
   // strip interactive attributes that make no sense in a file
   svg = svg.replace(/^<svg[^>]*>/, (tag) => tag.replace(/ (class|role|aria-label|style)="[^"]*"/g, ''))
   if (!svg.includes('xmlns:xlink')) svg = svg.replace('<svg ', '<svg xmlns:xlink="http://www.w3.org/1999/xlink" ')

@@ -8,9 +8,6 @@
       "type": "registry:component",
       "title": "opengraphcn core",
       "description": "Shared types, font metrics, deterministic text layout, SVG primitives and the browser PNG/SVG exporter.",
-      "dependencies": [
-        "react-dom"
-      ],
       "files": [
         {
           "path": "src/og/core/export.ts",
@@ -26,6 +23,11 @@
           "path": "src/og/core/kit.tsx",
           "type": "registry:component",
           "target": "components/opengraphcn/core/kit.tsx"
+        },
+        {
+          "path": "src/og/core/markup.ts",
+          "type": "registry:component",
+          "target": "components/opengraphcn/core/markup.ts"
         },
         {
           "path": "src/og/core/outline.ts",

@@ -27,7 +27,6 @@ items.push({
   type: 'registry:component',
   title: 'opengraphcn core',
   description: 'Shared types, font metrics, deterministic text layout, SVG primitives and the browser PNG/SVG exporter.',
-  dependencies: ['react-dom'],
   files: coreFiles,
 })
 items.push({

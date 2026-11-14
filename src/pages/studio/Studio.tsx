@@ -161,7 +161,7 @@ export function Studio({ route }: { route: Route }) {
   const col = COLLECTIONS.find((c) => c.id === t.collection)!
 
   return (
-    <div className="flex flex-col md:h-[calc(100dvh-56px)] md:flex-row">
+    <div className="flex flex-col overflow-x-hidden md:h-[calc(100dvh-56px)] md:flex-row">
       {/* left: templates (desktop) */}
       <aside className="hidden w-[264px] shrink-0 border-r border-line md:block" aria-label="Templates">
         <TemplateBrowser config={config} onPick={pickTemplate} />
@@ -169,7 +169,7 @@ export function Studio({ route }: { route: Route }) {
 
       {/* center: canvas */}
       <section className="flex min-w-0 flex-1 flex-col" aria-label="Canvas">
-        <div className="flex h-12 items-center gap-1 border-b border-line px-2 sm:px-3">
+        <div className="no-scrollbar flex h-12 items-center gap-1 overflow-x-auto border-b border-line px-2 sm:px-3">
           <Button size="icon-sm" variant="ghost" onClick={undo} disabled={!canUndo} aria-label="Undo" title="Undo (⌘Z)">
             <Undo2 />
           </Button>
@@ -188,17 +188,17 @@ export function Studio({ route }: { route: Route }) {
           >
             <RotateCcw />
           </Button>
-          <span className="mx-1 h-4 w-px bg-line-strong" />
-          <Button size="icon-sm" variant="ghost" aria-label="Zoom out" onClick={() => setZoom(Math.max(0.15, +(scale - 0.1).toFixed(2)))}>
+          <span className="mx-1 hidden h-4 w-px bg-line-strong sm:block" />
+          <Button size="icon-sm" variant="ghost" className="hidden sm:inline-flex" aria-label="Zoom out" onClick={() => setZoom(Math.max(0.15, +(scale - 0.1).toFixed(2)))}>
             <Minus />
           </Button>
-          <button className="w-12 rounded-md py-1 text-center font-mono text-[11.5px] text-ink-2 hover:bg-paper-2" onClick={() => setZoom(1)} title="Zoom to 100%">
+          <button className="hidden w-12 rounded-md py-1 text-center font-mono text-[11.5px] text-ink-2 hover:bg-paper-2 sm:block" onClick={() => setZoom(1)} title="Zoom to 100%">
             {Math.round(scale * 100)}%
           </button>
-          <Button size="icon-sm" variant="ghost" aria-label="Zoom in" onClick={() => setZoom(Math.min(2, +(scale + 0.1).toFixed(2)))}>
+          <Button size="icon-sm" variant="ghost" className="hidden sm:inline-flex" aria-label="Zoom in" onClick={() => setZoom(Math.min(2, +(scale + 0.1).toFixed(2)))}>
             <Plus />
           </Button>
-          <Button size="icon-sm" variant={zoom === 'fit' ? 'secondary' : 'ghost'} aria-label="Fit to screen" title="Fit to screen" onClick={() => setZoom('fit')}>
+          <Button size="icon-sm" variant={zoom === 'fit' ? 'secondary' : 'ghost'} className="hidden sm:inline-flex" aria-label="Fit to screen" title="Fit to screen" onClick={() => setZoom('fit')}>
             <Maximize />
           </Button>
           <Button size="icon-sm" variant="ghost" aria-label="Full-size preview" title="Full-size preview" onClick={() => setDialog('full')}>
