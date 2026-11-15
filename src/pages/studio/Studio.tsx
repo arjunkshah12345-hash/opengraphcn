@@ -161,9 +161,9 @@ export function Studio({ route }: { route: Route }) {
   const col = COLLECTIONS.find((c) => c.id === t.collection)!
 
   return (
-    <div className="flex flex-col overflow-x-hidden md:h-[calc(100dvh-56px)] md:flex-row">
+    <div className="flex flex-col overflow-x-hidden md:h-[calc(100dvh-49px)] md:flex-row">
       {/* left: templates (desktop) */}
-      <aside className="hidden w-[264px] shrink-0 border-r border-line md:block" aria-label="Templates">
+      <aside className="hidden w-[264px] shrink-0 border-r border-line bg-paper md:block" aria-label="Templates">
         <TemplateBrowser config={config} onPick={pickTemplate} />
       </aside>
 
@@ -192,7 +192,7 @@ export function Studio({ route }: { route: Route }) {
           <Button size="icon-sm" variant="ghost" className="hidden sm:inline-flex" aria-label="Zoom out" onClick={() => setZoom(Math.max(0.15, +(scale - 0.1).toFixed(2)))}>
             <Minus />
           </Button>
-          <button className="hidden w-12 rounded-md py-1 text-center font-mono text-[11.5px] text-ink-2 hover:bg-paper-2 sm:block" onClick={() => setZoom(1)} title="Zoom to 100%">
+          <button className="hidden w-12 rounded-lg py-1 text-center font-mono text-[11.5px] text-ink-2 hover:bg-paper-3/70 sm:block" onClick={() => setZoom(1)} title="Zoom to 100%">
             {Math.round(scale * 100)}%
           </button>
           <Button size="icon-sm" variant="ghost" className="hidden sm:inline-flex" aria-label="Zoom in" onClick={() => setZoom(Math.min(2, +(scale + 0.1).toFixed(2)))}>
@@ -219,9 +219,10 @@ export function Studio({ route }: { route: Route }) {
             </Button>
           </div>
         </div>
-        <div ref={stage} className="dot-grid relative h-[56vw] max-h-[60dvh] min-h-[220px] overflow-auto bg-paper-2/50 md:h-auto md:max-h-none md:flex-1">
+        <div ref={stage} className="dot-grid relative h-[56vw] max-h-[60dvh] min-h-[220px] overflow-auto bg-paper-2 md:h-auto md:max-h-none md:flex-1">
+          <div className="pointer-events-none sticky top-0 left-0 -mb-[100%] h-full w-full bg-[radial-gradient(60%_50%_at_50%_45%,rgb(124_138_255/0.10),transparent)]" />
           <div className="flex min-h-full w-max min-w-full items-center justify-center p-3 md:p-10">
-            <div className="og-surface shrink-0 overflow-hidden rounded-[6px] transition-[width] duration-200 ease-out-quart" style={{ width: 1200 * scale }} data-testid="studio-canvas">
+            <div className="og-surface shrink-0 overflow-hidden rounded-[8px] transition-[width] duration-200 ease-out-quart" style={{ width: 1200 * scale }} data-testid="studio-canvas">
               <OgPreview config={config} id="studio" />
             </div>
           </div>
@@ -243,15 +244,15 @@ export function Studio({ route }: { route: Route }) {
       </section>
 
       {/* right: controls */}
-      <aside className="flex w-full shrink-0 flex-col border-l border-line md:w-[352px]" aria-label="Controls">
-        <div role="tablist" className="no-scrollbar flex h-12 shrink-0 items-center gap-0.5 overflow-x-auto border-b border-line px-2">
+      <aside className="flex w-full shrink-0 flex-col border-l border-line bg-paper md:w-[352px]" aria-label="Controls">
+        <div role="tablist" className="no-scrollbar flex h-12 shrink-0 items-stretch overflow-x-auto border-b border-line">
           {tabs.map((tb) => (
             <button
               key={tb.id}
               role="tab"
               aria-selected={tab === tb.id}
               onClick={() => setTab(tb.id)}
-              className={cn('h-8 shrink-0 rounded-md px-3 text-[13px] font-medium transition-colors', tab === tb.id ? 'bg-paper-2 text-ink' : 'text-ink-2 hover:text-ink', tb.mobileOnly && 'md:hidden')}
+              className={cn('relative flex-1 shrink-0 px-3 text-[13px] font-medium transition-colors', tab === tb.id ? 'bg-paper-2 text-ink after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-accent' : 'text-ink-2 hover:bg-paper-2/60 hover:text-ink', tb.mobileOnly && 'md:hidden')}
             >
               {tb.label}
             </button>

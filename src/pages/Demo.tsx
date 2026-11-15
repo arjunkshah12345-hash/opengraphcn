@@ -201,7 +201,7 @@ export function Demo() {
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 className="absolute inset-x-6 bottom-6 rounded-xl bg-ink/95 p-6 text-paper shadow-2xl backdrop-blur md:inset-x-10 md:bottom-10 md:p-8"
               >
-                <p className="font-display text-[clamp(28px,3.6vw,48px)] leading-none">opengraphcn — make every link look incredible.</p>
+                <p className="text-[clamp(28px,3.6vw,48px)] leading-none font-semibold tracking-[-0.045em]">opengraphcn — make every link look incredible.</p>
                 <p className="mt-4 font-mono text-[13px] text-paper/70">{REPO_URL.replace('https://', '')}</p>
                 <p className="mt-2 overflow-x-auto font-mono text-[13px] whitespace-nowrap text-accent">$ {installCommand('launch')}</p>
               </motion.div>

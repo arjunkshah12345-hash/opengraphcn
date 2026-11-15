@@ -33,10 +33,10 @@ function highlight(code: string, lang: string) {
     const tok = m[0]
     let cls = ''
     if (tok.startsWith('//') || tok.startsWith('/*')) cls = 'text-ink-3 italic'
-    else if (/^['"`]/.test(tok)) cls = lang === 'json' && code[m.index + tok.length] === ':' ? 'text-ink' : 'text-accent'
-    else if (/^\d/.test(tok)) cls = 'text-[#9a6b1f] dark:text-[#e0b46a]'
-    else if (tok.startsWith('<')) cls = 'text-[#2f5fb3] dark:text-[#8fb4ff]'
-    else if (KW.test(tok) && tok.match(KW)![0] === tok) cls = 'text-[#2d6a64] dark:text-[#7cc7bd]'
+    else if (/^['"`]/.test(tok)) cls = lang === 'json' && code[m.index + tok.length] === ':' ? 'text-ink' : 'text-[#0f8a5f] dark:text-[#7ee2b8]'
+    else if (/^\d/.test(tok)) cls = 'text-[#b45309] dark:text-[#ffc27a]'
+    else if (tok.startsWith('<')) cls = 'text-[#c026d3] dark:text-[#f0abfc]'
+    else if (KW.test(tok) && tok.match(KW)![0] === tok) cls = 'text-[#4353ff] dark:text-[#a3adff]'
     out.push(
       <span key={k++} className={cls}>
         {tok}
@@ -50,7 +50,7 @@ function highlight(code: string, lang: string) {
 
 export function CodeBlock({ code, lang = 'tsx', className, title, maxHeight }: { code: string; lang?: 'tsx' | 'bash' | 'json'; className?: string; title?: string; maxHeight?: number }) {
   return (
-    <div className={cn('group relative overflow-hidden rounded-lg border border-line bg-paper-2/60', className)}>
+    <div className={cn('group relative overflow-hidden rounded-xl border border-line bg-paper-2', className)}>
       {title ? (
         <div className="flex h-9 items-center justify-between border-b border-line px-3 font-mono text-[11.5px] text-ink-3">
           <span>{title}</span>

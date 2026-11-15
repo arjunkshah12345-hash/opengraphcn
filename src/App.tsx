@@ -42,6 +42,7 @@ export function App() {
 
   return (
     <ToastProvider>
+      {chrome === 'full' ? <div className="page-frame" aria-hidden /> : null}
       {chrome !== 'none' ? <Nav path={path} wide={chrome === 'app'} /> : null}
       {page}
       {chrome === 'full' ? <Footer /> : null}

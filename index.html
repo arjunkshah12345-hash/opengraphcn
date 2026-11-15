@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>opengraphcn — Make every link look incredible</title>
     <meta name="description" content="30 beautiful Open Graph templates. Customize, export, and install. Completely open source." />
-    <meta name="theme-color" content="#f4f1ea" />
+    <meta name="theme-color" content="#050506" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta property="og:title" content="opengraphcn — Make every link look incredible" />
     <meta property="og:description" content="30 beautiful Open Graph templates. Customize, export, and install. Completely open source." />
@@ -18,7 +18,7 @@
     <script>
       try {
         var t = localStorage.getItem('ogcn-theme')
-        if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark')
+        if (t !== 'light') document.documentElement.classList.add('dark')
       } catch (e) {}
     </script>
   </head>
