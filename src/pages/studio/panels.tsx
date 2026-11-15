@@ -29,7 +29,7 @@ export function TemplateBrowser({ config, onPick, compact }: { config: OgConfig;
             <button
               key={c.id}
               onClick={() => setCol(c.id)}
-              className={cn('h-6 shrink-0 rounded-full px-2.5 text-[11.5px] font-medium transition-colors', col === c.id ? 'bg-ink text-paper' : 'text-ink-2 hover:bg-paper-2 hover:text-ink')}
+              className={cn('h-6 shrink-0 rounded-full px-2.5 text-[11.5px] font-medium transition-colors', col === c.id ? 'bg-paper-3 text-ink shadow-[inset_0_0_0_1px_var(--line-strong)]' : 'text-ink-2 hover:bg-paper-3/60 hover:text-ink')}
             >
               {c.label}
             </button>
@@ -41,7 +41,7 @@ export function TemplateBrowser({ config, onPick, compact }: { config: OgConfig;
           const active = t.id === config.template
           return (
             <button key={t.id} onClick={() => onPick(t.id)} className="group text-left" aria-pressed={active} aria-label={`Use ${t.name} template`}>
-              <div className={cn('overflow-hidden rounded-md transition-shadow duration-200', active ? 'shadow-[0_0_0_2px_var(--accent)]' : 'shadow-[0_0_0_1px_var(--line)] group-hover:shadow-[0_0_0_1px_var(--line-strong)]')}>
+              <div className={cn('overflow-hidden rounded-lg transition-shadow duration-200', active ? 'shadow-[0_0_0_2px_var(--accent)]' : 'shadow-[0_0_0_1px_var(--line)] group-hover:shadow-[0_0_0_1px_var(--line-strong)]')}>
                 <ThumbPreview id={t.id} content={deferred} assets={config.assets} />
               </div>
               <p className="mt-1.5 flex items-baseline gap-1.5 text-[12px] font-medium text-ink">
@@ -105,7 +105,7 @@ export function ContentPanel({ config, update }: { config: OgConfig; update: Upd
         {t.name} shows: name, headline, description{t.uses?.length ? `, ${t.uses.filter((u) => !['logo', 'favicon', 'screenshot', 'avatar'].includes(u)).join(', ')}` : ''}. Fields a template doesn’t use are kept for the next one.
       </p>
       {repo ? (
-        <details className="group rounded-md border border-line p-3" open={t.id === 'repository'}>
+        <details className="group rounded-xl border border-line bg-paper-2/60 p-3" open={t.id === 'repository'}>
           <summary className="cursor-pointer text-[12px] font-medium text-ink-2">Repository metadata</summary>
           <div className="mt-3 grid grid-cols-2 gap-3">
             <Field label="Owner" htmlFor="f-owner">
@@ -155,7 +155,7 @@ export function StylePanel({ config, update, keepColors, setKeepColors }: { conf
     <div className="grid gap-6">
       <div className="grid gap-3">
         <div className="flex items-center justify-between">
-          <p className="text-[12px] font-medium text-ink-2">Colors</p>
+          <p className="font-mono text-[11.5px] text-ink-2">Colors</p>
           {Object.values(config.theme).some(Boolean) ? (
             <Button size="sm" variant="ghost" onClick={() => update((c) => ({ ...c, theme: {} }))}>
               <RotateCcw /> Template colors
@@ -166,7 +166,7 @@ export function StylePanel({ config, update, keepColors, setKeepColors }: { conf
           {COLOR_FIELDS.map(({ key, label }) => {
             const overridden = !!config.theme[key]
             return (
-              <label key={key} className="flex items-center gap-2 rounded-md border border-line-strong p-1.5 pr-2 transition-colors hover:border-ink/30">
+              <label key={key} className="flex items-center gap-2 rounded-lg border border-line-strong bg-paper-2/60 p-1.5 pr-2 transition-colors hover:border-ink/30">
                 <input type="color" aria-label={`${label} color`} value={theme[key]} onChange={(e) => setColor(key, e.target.value)} className="size-7 shrink-0" />
                 <span className="grid min-w-0 flex-1">
                   <span className="text-[11px] text-ink-3">{label}</span>
@@ -194,7 +194,7 @@ export function StylePanel({ config, update, keepColors, setKeepColors }: { conf
           id="f-font"
           value={config.options.displayFont ?? ''}
           onChange={(e) => update((c) => ({ ...c, options: { ...c.options, displayFont: e.target.value || undefined } }))}
-          className="h-9 w-full rounded-md border border-line-strong bg-paper px-2.5 text-sm text-ink focus:border-ink/50 focus:outline-none"
+          className="h-9 w-full rounded-lg border border-line-strong bg-paper-2/60 px-2.5 text-sm text-ink focus:border-accent/70 focus:outline-none"
         >
           <option value="">{t.fonts.display.family} (template default)</option>
           {FAMILIES.filter((f) => f !== t.fonts.display.family).map((f) => (
@@ -251,7 +251,7 @@ export function BrandPanel({ config, update }: { config: OgConfig; update: Updat
         {ASSETS.map((a) => {
           const value = config.assets[a.key]
           return (
-            <div key={a.key} className="flex items-center gap-3 rounded-md border border-line p-2.5">
+            <div key={a.key} className="flex items-center gap-3 rounded-xl border border-line bg-paper-2/60 p-2.5">
               <div className="dot-grid grid size-12 shrink-0 place-items-center overflow-hidden rounded-md border border-line bg-paper-2">
                 {value ? <img src={value} alt="" className="size-full object-contain" /> : <ImagePlus className="size-4 text-ink-3" />}
               </div>
@@ -267,7 +267,7 @@ export function BrandPanel({ config, update }: { config: OgConfig; update: Updat
                   <Trash2 />
                 </Button>
               ) : null}
-              <label className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md bg-paper-2 px-2.5 text-[12.5px] font-medium text-ink transition-colors hover:bg-paper-3">
+              <label className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg bg-paper-3/80 px-2.5 text-[12.5px] font-medium text-ink shadow-[inset_0_0_0_1px_var(--line)] transition-colors hover:bg-paper-3">
                 <Upload className="size-3.5" />
                 {value ? 'Replace' : 'Upload'}
                 <input

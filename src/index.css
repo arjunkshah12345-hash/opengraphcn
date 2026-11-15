@@ -3,8 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-display: 'Instrument Serif', ui-serif, Georgia, serif;
-  --font-sans: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-paper: var(--paper);
@@ -16,37 +16,48 @@
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
   --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
   --color-accent-ink: var(--accent-ink);
 
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* light — hmm.css-style neutral paper */
 :root {
-  --paper: #f4f1ea;
-  --paper-2: #ece8de;
-  --paper-3: #e3ded2;
-  --ink: #1a1917;
-  --ink-2: #5a564e;
-  --ink-3: #8c877c;
-  --line: rgb(26 25 23 / 0.1);
-  --line-strong: rgb(26 25 23 / 0.2);
-  --accent: #e5481f;
+  --paper: #ffffff;
+  --paper-2: #f6f6f7;
+  --paper-3: #ececef;
+  --ink: #0a0a0b;
+  --ink-2: #52525b;
+  --ink-3: #8b8b94;
+  --line: rgb(10 10 11 / 0.08);
+  --line-strong: rgb(10 10 11 / 0.15);
+  --accent: #4353ff;
+  --accent-2: #6d7bff;
   --accent-ink: #ffffff;
+  --glass: rgb(255 255 255 / 0.72);
+  --frame: #ffffff;
+  --shadow-panel: 0 1px 0 rgb(0 0 0 / 0.02), 0 1px 12px rgb(0 0 0 / 0.06), 0 0 0 1px rgb(0 0 0 / 0.08);
   color-scheme: light;
 }
 
+/* dark — the default */
 .dark {
-  --paper: #11100f;
-  --paper-2: #1a1917;
-  --paper-3: #24221f;
-  --ink: #f1ede4;
-  --ink-2: #aaa499;
-  --ink-3: #757066;
-  --line: rgb(241 237 228 / 0.09);
-  --line-strong: rgb(241 237 228 / 0.18);
-  --accent: #ff5a2c;
-  --accent-ink: #160b07;
+  --paper: #050506;
+  --paper-2: #0d0d10;
+  --paper-3: #18181c;
+  --ink: #f4f4f5;
+  --ink-2: #a1a1aa;
+  --ink-3: #65656e;
+  --line: rgb(255 255 255 / 0.075);
+  --line-strong: rgb(255 255 255 / 0.14);
+  --accent: #7c8aff;
+  --accent-2: #a3adff;
+  --accent-ink: #05050a;
+  --glass: rgb(12 12 15 / 0.7);
+  --frame: #050506;
+  --shadow-panel: 0 0 0 1px rgb(255 255 255 / 0.07), 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 16px 40px -12px rgb(0 0 0 / 0.7);
   color-scheme: dark;
 }
 
@@ -61,7 +72,7 @@ html {
 
 body {
   font-family: var(--font-sans);
-  font-feature-settings: 'ss01', 'cv11';
+  font-feature-settings: 'ss01';
   min-height: 100dvh;
 }
 
@@ -84,9 +95,87 @@ body {
 }
 .dark .og-surface {
   box-shadow:
-    0 0 0 1px var(--line-strong),
-    0 24px 48px -16px rgb(0 0 0 / 0.6);
+    0 0 0 1px rgb(255 255 255 / 0.09),
+    0 24px 48px -16px rgb(0 0 0 / 0.8);
 }
+
+/* dithercn-style rounded frame around the viewport */
+.page-frame {
+  position: fixed;
+  inset: 8px;
+  z-index: 60;
+  pointer-events: none;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  box-shadow: 0 0 0 24px var(--frame);
+}
+@media (max-width: 640px) {
+  .page-frame { inset: 4px; border-radius: 14px; }
+}
+
+/* hmm.css-style lifted panel */
+.panel {
+  background: var(--paper-2);
+  box-shadow: var(--shadow-panel);
+}
+
+/* glossy accent button */
+.btn-accent {
+  color: #fff;
+  background: linear-gradient(180deg, #6271ff, #4353ff);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.28), 0 1px 2px rgb(67 83 255 / 0.4), 0 0 0 1px #3a49e6;
+}
+.btn-accent:hover { background: linear-gradient(180deg, #6f7dff, #4d5cff); }
+.dark .btn-accent {
+  color: #06061a;
+  background: linear-gradient(180deg, #b3bbff, #7c8aff);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5), 0 0 0 1px #6c7bff, 0 8px 24px -8px rgb(124 138 255 / 0.6);
+}
+.dark .btn-accent:hover { background: linear-gradient(180deg, #c0c7ff, #8a97ff); }
+
+/* text that shimmers through the brand gradient */
+.text-gradient {
+  background: linear-gradient(100deg, var(--ink) 30%, var(--accent-2) 55%, #ff9ad5 72%, #ffc27a 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* fine film grain (gradients.sh) */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* dot-matrix mask that turns a canvas into crisp dither cells */
+.dither-mask {
+  image-rendering: pixelated;
+  -webkit-mask-image: linear-gradient(90deg, #000 var(--dot, 66%), transparent 0), linear-gradient(#000 var(--dot, 66%), transparent 0);
+  mask-image: linear-gradient(90deg, #000 var(--dot, 66%), transparent 0), linear-gradient(#000 var(--dot, 66%), transparent 0);
+  -webkit-mask-size: var(--cell, 6px) var(--cell, 6px);
+  mask-size: var(--cell, 6px) var(--cell, 6px);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.marquee {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--dur, 90s) linear infinite;
+  will-change: transform;
+}
+.marquee-track.reverse { animation-direction: reverse; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { to { transform: translateX(-50%); } }
 
 .og-svg {
   display: block;

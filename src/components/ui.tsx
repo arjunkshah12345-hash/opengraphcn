@@ -9,18 +9,18 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'outline' | 'accent'
 type Size = 'sm' | 'md' | 'lg' | 'icon' | 'icon-sm'
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-ink text-paper hover:bg-ink/88 active:bg-ink/80',
-  accent: 'bg-accent text-accent-ink hover:brightness-110 active:brightness-95',
-  secondary: 'bg-paper-2 text-ink hover:bg-paper-3',
-  outline: 'border border-line-strong text-ink hover:bg-paper-2 hover:border-ink/30',
-  ghost: 'text-ink-2 hover:text-ink hover:bg-paper-2',
+  primary: 'btn-accent',
+  accent: 'btn-accent',
+  secondary: 'bg-paper-3/80 text-ink shadow-[inset_0_0_0_1px_var(--line)] hover:bg-paper-3',
+  outline: 'bg-paper-2/60 text-ink shadow-[inset_0_0_0_1px_var(--line-strong)] backdrop-blur hover:bg-paper-3/80',
+  ghost: 'text-ink-2 hover:text-ink hover:bg-paper-3/70',
 }
 const sizes: Record<Size, string> = {
-  sm: 'h-8 px-3 text-[13px] gap-1.5 rounded-md',
-  md: 'h-9 px-3.5 text-sm gap-2 rounded-md',
+  sm: 'h-8 px-3 text-[13px] gap-1.5 rounded-lg',
+  md: 'h-9 px-3.5 text-sm gap-2 rounded-[10px]',
   lg: 'h-11 px-5 text-[15px] gap-2 rounded-full',
-  icon: 'h-9 w-9 rounded-md',
-  'icon-sm': 'h-8 w-8 rounded-md',
+  icon: 'h-9 w-9 rounded-[10px]',
+  'icon-sm': 'h-8 w-8 rounded-lg',
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -63,7 +63,7 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
     <input
       ref={ref}
       className={cn(
-        'h-9 w-full rounded-md border border-line-strong bg-paper px-3 text-sm text-ink placeholder:text-ink-3 transition-colors hover:border-ink/30 focus:border-ink/50 focus:outline-none focus-visible:outline-none',
+        'h-9 w-full rounded-lg border border-line-strong bg-paper/60 px-3 text-sm text-ink placeholder:text-ink-3 transition-colors hover:border-ink/25 focus:border-accent/70 focus:ring-3 focus:ring-accent/15 focus:outline-none focus-visible:outline-none',
         className,
       )}
       {...props}
@@ -76,7 +76,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
     <textarea
       ref={ref}
       className={cn(
-        'w-full resize-none rounded-md border border-line-strong bg-paper px-3 py-2 text-sm leading-relaxed text-ink placeholder:text-ink-3 transition-colors hover:border-ink/30 focus:border-ink/50 focus:outline-none focus-visible:outline-none',
+        'w-full resize-none rounded-lg border border-line-strong bg-paper/60 px-3 py-2 text-sm leading-relaxed text-ink placeholder:text-ink-3 transition-colors hover:border-ink/25 focus:border-accent/70 focus:ring-3 focus:ring-accent/15 focus:outline-none focus-visible:outline-none',
         className,
       )}
       {...props}
@@ -106,7 +106,7 @@ export function Field({ label, hint, htmlFor, children, counter, className }: { 
 
 export function Segmented<T extends string>({ value, onChange, options, className, size = 'md' }: { value: T; onChange: (v: T) => void; options: { value: T; label: ReactNode; title?: string }[]; className?: string; size?: 'sm' | 'md' }) {
   return (
-    <div role="radiogroup" className={cn('inline-flex rounded-md bg-paper-2 p-0.5', className)}>
+    <div role="radiogroup" className={cn('inline-flex rounded-[10px] bg-paper-3/70 p-0.5', className)}>
       {options.map((o) => (
         <button
           key={o.value}
@@ -116,9 +116,9 @@ export function Segmented<T extends string>({ value, onChange, options, classNam
           title={o.title}
           onClick={() => onChange(o.value)}
           className={cn(
-            'flex-1 whitespace-nowrap rounded-[5px] font-medium transition-[background-color,color,box-shadow] duration-150',
+            'flex-1 whitespace-nowrap rounded-lg font-medium transition-[background-color,color,box-shadow] duration-150',
             size === 'sm' ? 'h-7 px-2.5 text-[12px]' : 'h-8 px-3 text-[13px]',
-            value === o.value ? 'bg-paper text-ink shadow-[0_0_0_1px_var(--line),0_1px_2px_rgb(0_0_0/0.06)]' : 'text-ink-2 hover:text-ink',
+            value === o.value ? 'bg-paper text-ink shadow-[0_0_0_1px_var(--line-strong),0_1px_2px_rgb(0_0_0/0.1)]' : 'text-ink-2 hover:text-ink',
           )}
         >
           {o.label}
@@ -138,7 +138,7 @@ export function Switch({ checked, onChange, label, id }: { checked: boolean; onC
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={cn('relative h-5 w-9 rounded-full transition-colors duration-200', checked ? 'bg-ink' : 'bg-paper-3')}
+        className={cn('relative h-5 w-9 rounded-full transition-colors duration-200', checked ? 'bg-accent' : 'bg-paper-3 shadow-[inset_0_0_0_1px_var(--line-strong)]')}
       >
         <span className={cn('absolute top-0.5 left-0.5 size-4 rounded-full bg-paper shadow-sm transition-transform duration-200 ease-out-quart', checked && 'translate-x-4')} />
       </button>
@@ -147,7 +147,7 @@ export function Switch({ checked, onChange, label, id }: { checked: boolean; onC
 }
 
 export function Kbd({ children }: { children: ReactNode }) {
-  return <kbd className="inline-flex h-5 min-w-5 items-center justify-center rounded border border-line-strong bg-paper px-1 font-mono text-[10.5px] text-ink-2">{children}</kbd>
+  return <kbd className="inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-line-strong bg-paper-3/60 px-1 font-mono text-[10.5px] text-ink-2">{children}</kbd>
 }
 
 export async function copyText(text: string) {
@@ -215,8 +215,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           <div
             key={t.id}
             className={cn(
-              'pointer-events-auto max-w-md rounded-full px-4 py-2 text-[13px] font-medium shadow-lg animate-[toast-in_240ms_var(--ease-out-expo)]',
-              t.tone === 'error' ? 'bg-accent text-accent-ink' : 'bg-ink text-paper',
+              'pointer-events-auto max-w-md rounded-full px-4 py-2 text-[13px] font-medium shadow-[var(--shadow-panel)] backdrop-blur-md animate-[toast-in_240ms_var(--ease-out-expo)]',
+              t.tone === 'error' ? 'bg-[#ff5a5a] text-white' : 'bg-paper-3/90 text-ink',
             )}
           >
             {t.text}

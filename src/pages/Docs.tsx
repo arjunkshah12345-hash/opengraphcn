@@ -18,7 +18,7 @@ const PAGES = [
 ]
 
 function H1({ children }: { children: ReactNode }) {
-  return <h1 className="font-display text-[clamp(40px,5vw,60px)] leading-[0.98] tracking-[-0.015em] text-ink">{children}</h1>
+  return <h1 className="text-[clamp(36px,4.6vw,52px)] leading-[1.02] font-semibold tracking-[-0.045em] text-ink">{children}</h1>
 }
 function H2({ children, id }: { children: ReactNode; id?: string }) {
   return (
@@ -31,13 +31,13 @@ function P({ children }: { children: ReactNode }) {
   return <p className="my-3 max-w-[68ch] text-[15px] leading-[1.7] text-ink-2">{children}</p>
 }
 function C({ children }: { children: ReactNode }) {
-  return <code className="rounded bg-paper-2 px-1.5 py-0.5 font-mono text-[12.5px] text-ink">{children}</code>
+  return <code className="rounded-md bg-paper-3/70 px-1.5 py-0.5 font-mono text-[12.5px] text-ink">{children}</code>
 }
 function UL({ children }: { children: ReactNode }) {
   return <ul className="my-3 grid max-w-[68ch] list-disc gap-1.5 pl-5 text-[15px] leading-[1.65] text-ink-2 marker:text-ink-3">{children}</ul>
 }
 function Note({ children }: { children: ReactNode }) {
-  return <div className="my-5 max-w-[68ch] rounded-lg border-l-2 border-accent bg-paper-2/70 px-4 py-3 text-[14px] leading-relaxed text-ink-2">{children}</div>
+  return <div className="my-5 max-w-[68ch] rounded-xl bg-accent/8 px-4 py-3 shadow-[inset_0_0_0_1px_rgb(124_138_255/0.22)] text-[14px] leading-relaxed text-ink-2">{children}</div>
 }
 
 function GettingStarted() {
@@ -330,11 +330,11 @@ const CONTENT: Record<string, () => ReactNode> = {
 export function Docs({ page }: { page: string }) {
   const Page = CONTENT[page] ?? GettingStarted
   return (
-    <main className="mx-auto grid max-w-[1240px] gap-10 px-4 pt-10 pb-24 sm:px-6 md:grid-cols-[200px_1fr]">
-      <nav aria-label="Documentation" className="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 md:sticky md:top-24 md:mx-0 md:grid md:content-start md:self-start md:px-0">
-        <p className="hidden pb-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3 md:block">Documentation</p>
+    <main className="mx-auto grid max-w-[1200px] gap-10 px-4 pt-28 pb-28 sm:px-6 sm:pt-32 md:grid-cols-[210px_1fr] md:gap-14">
+      <nav aria-label="Documentation" className="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 md:sticky md:top-28 md:mx-0 md:grid md:content-start md:self-start md:px-0">
+        <p className="hidden pb-2 pl-3 font-mono text-[12px] text-ink-3 md:block">Documentation</p>
         {PAGES.map((p) => (
-          <a key={p.id} href={href(p.id ? `/docs/${p.id}` : '/docs')} className={cn('shrink-0 rounded-md px-2.5 py-1.5 text-[13.5px] transition-colors', page === p.id ? 'bg-paper-2 font-medium text-ink' : 'text-ink-2 hover:text-ink')}>
+          <a key={p.id} href={href(p.id ? `/docs/${p.id}` : '/docs')} className={cn('shrink-0 rounded-lg px-3 py-1.5 text-[13.5px] transition-colors', page === p.id ? 'bg-paper-3/80 font-medium text-ink shadow-[inset_0_0_0_1px_var(--line)]' : 'text-ink-2 hover:text-ink')}>
             {p.label}
           </a>
         ))}
