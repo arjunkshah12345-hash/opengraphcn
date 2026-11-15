@@ -179,3 +179,56 @@ export function Arrow({ x, y, size, stroke, dir = 0, width = 2 }: { x: number; y
     </g>
   )
 }
+
+/* ───────────── texture helpers (pure SVG, render the same in browsers and resvg) ───────────── */
+
+const BAYER8 = [
+  0, 32, 8, 40, 2, 34, 10, 42, 48, 16, 56, 24, 50, 18, 58, 26, 12, 44, 4, 36, 14, 46, 6, 38, 60, 28, 52, 20, 62, 30, 54, 22, 3, 35, 11, 43, 1, 33, 9, 41, 51, 19, 59, 27, 49, 17, 57, 25,
+  15, 47, 7, 39, 13, 45, 5, 37, 63, 31, 55, 23, 61, 29, 53, 21,
+].map((v) => (v + 0.5) / 64)
+
+/** ordered (Bayer 8×8) dither threshold for a cell */
+export function bayer(ix: number, iy: number) {
+  return BAYER8[(iy & 7) * 8 + (ix & 7)]
+}
+
+/**
+ * Path data for an ordered-dither field: one square per cell where `f(u, v)` (0–1, u/v across the
+ * region) beats the Bayer threshold. One <path>, so even dense fields stay small.
+ */
+export function ditherPath({ x, y, w, h, cell, dot = 0.72, f }: { x: number; y: number; w: number; h: number; cell: number; dot?: number; f: (u: number, v: number) => number }) {
+  const cols = Math.floor(w / cell)
+  const rows = Math.floor(h / cell)
+  // whole-pixel squares keep browsers and resvg from anti-aliasing the cell edges differently
+  const s = Math.max(1, Math.round(cell * dot))
+  const off = Math.floor((cell - s) / 2)
+  let d = ''
+  for (let iy = 0; iy < rows; iy++) {
+    for (let ix = 0; ix < cols; ix++) {
+      if (f((ix + 0.5) / cols, (iy + 0.5) / rows) > bayer(ix, iy)) {
+        d += `M${Math.round((x + ix * cell + off) * 100) / 100} ${Math.round((y + iy * cell + off) * 100) / 100}h${s}v${s}h-${s}z`
+      }
+    }
+  }
+  return d
+}
+
+/** path data for a regular dot grid (tiny squares), used as a quiet background texture */
+export function dotGridPath({ x, y, w, h, gap, size = 1.6 }: { x: number; y: number; w: number; h: number; gap: number; size?: number }) {
+  let d = ''
+  for (let iy = y; iy <= y + h; iy += gap) for (let ix = x; ix <= x + w; ix += gap) d += `M${ix} ${iy}h${size}v${size}h-${size}z`
+  return d
+}
+
+/** a soft, blurred colour blob (for gradient meshes and glows) */
+export function Blob({ uid, id, cx, cy, rx, ry = rx, fill, blur = 80, opacity = 1 }: { uid: string; id: string; cx: number; cy: number; rx: number; ry?: number; fill: string; blur?: number; opacity?: number }) {
+  const fid = `${uid}-blob-${id}`
+  return (
+    <g>
+      <filter id={fid} x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation={blur} />
+      </filter>
+      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={fill} opacity={opacity} filter={`url(#${fid})`} />
+    </g>
+  )
+}

@@ -1,63 +1,40 @@
-import { BlockText, blockTop, join, Mark } from '../core/kit'
+import { BlockText, blockTop, Blob, Mark } from '../core/kit'
 import { Frame, Grain, Text } from '../core/primitives'
+import { measure } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
 import { hueShift } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
 
-const H = 630
+const W = 1200
 /* ─────────────────────────── 13 · Chromatic ─────────────────────────── */
 
 function Chromatic({ content: c, theme: t, options: o, fonts: f, uid, assets }: TemplateProps) {
+  const M = 72
   const s = o.scale
-  const irid = [t.primary, hueShift(t.primary, 70), t.accent, hueShift(t.accent, 80), hueShift(t.primary, -60)]
-  const head = blockTop(c.headline, { font: f.display, maxWidth: 560, maxLines: 4, max: 56 * s, min: 28, lineHeight: 1.08, tracking: -0.03, top: 150, maxHeight: 280 })
-  const desc = blockTop(c.description, { font: f.body, maxWidth: 470, maxLines: 3, max: 19, min: 15, lineHeight: 1.45, top: head.bottom + 26 })
+  const head = blockTop(c.headline, { font: f.display, maxWidth: 820, maxLines: 3, max: 78 * s, min: 34, lineHeight: 1.04, tracking: -0.035, top: 214, maxHeight: 250 })
+  const desc = blockTop(c.description, { font: f.body, maxWidth: 560, maxLines: 2, max: 21, min: 16, lineHeight: 1.42, top: head.bottom + 26 })
+  const badgeW = c.badge ? measure(c.badge, f.label, 15) + 32 : 0
   return (
     <Frame background={t.background}>
-      <defs>
-        <linearGradient id={`${uid}-irid`} x1="0" y1="0" x2="1" y2="1">
-          {irid.map((col, i) => (
-            <stop key={i} offset={i / (irid.length - 1)} stopColor={col} />
-          ))}
-        </linearGradient>
-        <linearGradient id={`${uid}-irid2`} x1="1" y1="0" x2="0" y2="1">
-          {[...irid].reverse().map((col, i) => (
-            <stop key={i} offset={i / (irid.length - 1)} stopColor={col} />
-          ))}
-        </linearGradient>
-        <radialGradient id={`${uid}-sphere`} cx="0.35" cy="0.3" r="0.75">
-          <stop offset="0" stopColor="#ffffff" />
-          <stop offset="0.35" stopColor={irid[1]} />
-          <stop offset="0.75" stopColor={irid[3]} />
-          <stop offset="1" stopColor={irid[4]} />
-        </radialGradient>
-        <filter id={`${uid}-blur`} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation={18} />
-        </filter>
-        <filter id={`${uid}-bloom`} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation={60} />
-        </filter>
-      </defs>
-      <g filter={`url(#${uid}-bloom)`} opacity={0.55}>
-        <circle cx={930} cy={300} r={240} fill={`url(#${uid}-irid)`} />
-      </g>
-      <circle cx={930} cy={300} r={196} fill="none" stroke={`url(#${uid}-irid)`} strokeWidth={110} />
-      <circle cx={930} cy={300} r={196} fill="none" stroke={`url(#${uid}-irid2)`} strokeWidth={110} opacity={0.5} style={{ mixBlendMode: 'screen' }} />
-      <ellipse cx={850} cy={150} rx={120} ry={26} fill="#ffffff" opacity={0.75} filter={`url(#${uid}-blur)`} transform="rotate(-28 850 150)" />
-      <circle cx={930} cy={300} r={141} fill="none" stroke="#ffffff" strokeOpacity={0.55} strokeWidth={1.5} />
-      <circle cx={930} cy={300} r={251} fill="none" stroke="#ffffff" strokeOpacity={0.4} strokeWidth={1.5} />
-      <circle cx={700} cy={500} r={78} fill={`url(#${uid}-sphere)`} />
-      <ellipse cx={680} cy={474} rx={26} ry={14} fill="#ffffff" opacity={0.8} filter={`url(#${uid}-blur)`} />
-      <Grain uid={uid} opacity={0.1} blend="overlay" />
+      <Blob uid={uid} id="a" cx={1040} cy={120} rx={300} ry={230} fill={t.primary} blur={90} />
+      <Blob uid={uid} id="b" cx={820} cy={520} rx={320} ry={190} fill={t.accent} blur={100} />
+      <Blob uid={uid} id="c" cx={1180} cy={470} rx={200} ry={170} fill={hueShift(t.primary, 70)} blur={90} opacity={0.9} />
+      <Blob uid={uid} id="d" cx={480} cy={-60} rx={300} ry={130} fill={hueShift(t.accent, -60)} blur={90} opacity={0.6} />
+      <Grain uid={uid} opacity={0.12} freq={0.8} blend="multiply" />
       {o.showBrand ? (
         <g>
-          <Mark x={72} y={60} size={34} assets={assets} name={c.name} uid={uid} fill={t.text} color={t.background} font={f.display} shape="circle" />
-          <Text x={118} y={84} lines={c.name} font={f.display} size={18} tracking={-0.01} fill={t.text} />
+          <Mark x={M} y={70} size={40} assets={assets} name={c.name} uid={uid} fill={t.text} color={t.background} font={f.display} shape="rounded" />
+          <Text x={M + 54} y={97} lines={c.name} font={f.label} size={20} fill={t.text} />
         </g>
       ) : null}
-      <Text x={70} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.03} fill={t.text} />
-      <BlockText b={desc} x={72} font={f.body} fill={t.text} opacity={0.7} />
-      {o.showMeta ? <Text x={72} y={H - 60} lines={join([c.domain, c.badge], '   ·   ')} font={f.body} size={15} fill={t.text} opacity={0.6} /> : null}
+      {o.showMeta && c.badge ? (
+        <g>
+          <rect x={W - M - badgeW} y={70} width={badgeW} height={40} rx={20} fill="#ffffff" fillOpacity={0.55} stroke="#ffffff" strokeOpacity={0.9} />
+          <Text x={W - M - badgeW / 2} y={95} anchor="middle" lines={c.badge} font={f.label} size={15} fill={t.text} />
+        </g>
+      ) : null}
+      <Text x={M - 3} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.035} fill={t.text} />
+      {desc.bottom < 580 ? <BlockText b={desc} x={M} font={f.body} fill={t.text} opacity={0.68} /> : null}
     </Frame>
   )
 }
@@ -67,12 +44,13 @@ export const chromatic: TemplateDef = {
   number: 13,
   name: 'Chromatic',
   collection: 'abstract',
-  description: 'An iridescent ring and pearl sphere with specular highlights on a cool pearl ground.',
+  description: 'A soft iridescent pastel field with a bold rounded headline in near-black.',
   fonts: {
     display: { family: 'Unbounded', weight: 600 },
     body: { family: 'Inter Tight', weight: 400 },
+    label: { family: 'Inter Tight', weight: 600 },
   },
-  theme: { primary: '#ff8fd0', accent: '#8fe7ff', background: '#ebe9f0', text: '#141218' },
+  theme: { primary: '#ff9ad5', accent: '#8fe3ff', background: '#f3f1f7', text: '#121016' },
   limits: { headline: 50, description: 100 },
   uses: ['logo', 'badge'],
   render: Chromatic,

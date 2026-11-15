@@ -1,80 +1,65 @@
-import { BlockText, blockTop, caps, Mark } from '../core/kit'
-import { Frame, Text } from '../core/primitives'
-import { ellipsize, measure } from '../core/text'
+import { BlockText, blockTop, Blob, ditherPath, Mark } from '../core/kit'
+import { Frame, Grain, Text } from '../core/primitives'
+import { ellipsize, fitLine, measure } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
 import { mix } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
 
-const H = 630
 /* ─────────────────────────── 27 · Showcase ─────────────────────────── */
 
 function Showcase({ content: c, theme: t, options: o, fonts: f, assets, uid }: TemplateProps) {
-  const M = 64
+  const M = 72
   const s = o.scale
-  const head = blockTop(c.headline, { font: f.display, maxWidth: 420, maxLines: 4, max: 54 * s, min: 28, lineHeight: 1.04, tracking: -0.04, top: 176, maxHeight: 250 })
-  const desc = blockTop(c.description, { font: f.body, maxWidth: 400, maxLines: 3, max: 18, min: 15, lineHeight: 1.45, top: head.bottom + 22 })
-  const bx = 548
-  const by = 84
-  const bw = 720
-  const bh = 620
-  const urlW = 300
-  const inner = { x: bx, y: by + 46, w: bw, h: bh - 46 }
-  const mini = blockTop(c.headline, { font: f.display, maxWidth: 520, maxLines: 2, max: 40, min: 22, lineHeight: 1.05, tracking: -0.04, top: inner.y + 120 })
+  const head = blockTop(c.headline, { font: f.display, maxWidth: 470, maxLines: 4, max: 64 * s, min: 30, lineHeight: 1.02, tracking: -0.04, top: 206, maxHeight: 250 })
+  const desc = blockTop(c.description, { font: f.body, maxWidth: 430, maxLines: 3, max: 19, min: 15, lineHeight: 1.45, top: head.bottom + 22 })
+  const win = { x: 610, y: 96, w: 700, h: 600 }
+  const inner = { x: win.x, y: win.y + 46, w: win.w, h: win.h - 46 }
+  const url = ellipsize(c.domain || c.name, f.mono, 13, 300)
+  const urlW = measure(url, f.mono, 13) + 40
+  const hero = fitLine(c.name || ' ', f.display, 76, 30, 480, -0.045)
+  const badgeW = c.badge ? measure(c.badge, f.label, 13) + 26 : 0
   return (
     <Frame background={t.background}>
-      <defs>
-        <filter id={`${uid}-sh`} x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation={22} />
-        </filter>
-        <clipPath id={`${uid}-win`}>
-          <rect x={bx} y={by} width={bw} height={bh} rx={14} />
-        </clipPath>
-        <linearGradient id={`${uid}-card`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor={t.accent} />
-          <stop offset="1" stopColor={mix(t.accent, t.primary, 0.6)} />
-        </linearGradient>
-      </defs>
-      <rect x={bx + 20} y={by + 36} width={bw} height={bh} rx={14} fill="#000000" opacity={0.18} filter={`url(#${uid}-sh)`} />
-      <g clipPath={`url(#${uid}-win)`}>
-        <rect x={bx} y={by} width={bw} height={bh} fill="#ffffff" />
-        <rect x={bx} y={by} width={bw} height={46} fill={mix('#ffffff', t.text, 0.05)} />
-        {[0, 1, 2].map((i) => (
-          <circle key={i} cx={bx + 24 + i * 18} cy={by + 23} r={5.5} fill={t.text} fillOpacity={0.16} />
-        ))}
-        <rect x={bx + bw / 2 - urlW / 2 - 60} y={by + 11} width={urlW} height={24} rx={12} fill={t.text} fillOpacity={0.06} />
-        <Text x={bx + bw / 2 - 60} y={by + 28} anchor="middle" lines={ellipsize(c.domain, f.body, 13, urlW - 30)} font={f.body} size={13} fill={t.text} opacity={0.6} />
-        {assets.screenshot ? (
-          <image href={assets.screenshot} x={inner.x} y={inner.y} width={inner.w} height={inner.h} preserveAspectRatio="xMidYMin slice" />
-        ) : (
-          <g>
-            <Mark x={inner.x + 36} y={inner.y + 30} size={26} assets={assets} name={c.name} uid={uid} fill={t.text} color="#ffffff" font={f.label} />
-            <Text x={inner.x + 72} y={inner.y + 49} lines={ellipsize(c.name, f.label, 16, 200)} font={f.label} size={16} fill={t.text} />
-            {[0, 1, 2].map((i) => (
-              <rect key={i} x={inner.x + 330 + i * 70} y={inner.y + 39} width={46} height={8} rx={4} fill={t.text} fillOpacity={0.14} />
-            ))}
-            <Text x={inner.x + 36} y={mini.y} lines={mini.lines} font={f.display} size={mini.size} lh={mini.lh} tracking={-0.04} fill={t.text} />
-            <rect x={inner.x + 36} y={mini.bottom + 22} width={128} height={38} rx={19} fill={t.accent} />
-            <Text x={inner.x + 100} y={mini.bottom + 46} anchor="middle" lines="Get started" font={f.label} size={14} fill="#ffffff" />
-            <rect x={inner.x + 176} y={mini.bottom + 22} width={110} height={38} rx={19} fill="none" stroke={t.text} strokeOpacity={0.2} />
-            <Text x={inner.x + 231} y={mini.bottom + 46} anchor="middle" lines="Docs" font={f.label} size={14} fill={t.text} />
-            <rect x={inner.x + 36} y={mini.bottom + 92} width={inner.w - 72} height={260} rx={12} fill={`url(#${uid}-card)`} />
-            {[0, 1, 2].map((i) => (
-              <rect key={i} x={inner.x + 64 + i * 200} y={mini.bottom + 124} width={176} height={110} rx={8} fill="#ffffff" fillOpacity={0.18 + i * 0.06} />
-            ))}
-          </g>
-        )}
-      </g>
-      <rect x={bx} y={by} width={bw} height={bh} rx={14} fill="none" stroke={t.text} strokeOpacity={0.12} />
-      {c.badge ? (
+      <Blob uid={uid} id="a" cx={980} cy={180} rx={340} ry={240} fill={t.accent} blur={110} opacity={0.55} />
+      <Blob uid={uid} id="b" cx={760} cy={620} rx={300} ry={180} fill={t.primary} blur={110} opacity={0.45} />
+      <Grain uid={uid} opacity={0.08} />
+      {o.showBrand ? (
         <g>
-          <rect x={M} y={100} width={measure(caps(c.badge), f.label, 12, 0.12) + 24} height={26} rx={13} fill={t.accent} fillOpacity={0.14} />
-          <Text x={M + 12} y={117} lines={caps(c.badge)} font={f.label} size={12} tracking={0.12} fill={t.accent} />
+          <Mark x={M} y={70} size={36} assets={assets} name={c.name} uid={uid} fill={t.text} color={t.background} font={f.display} shape="rounded" />
+          <Text x={M + 50} y={95} lines={c.name} font={f.label} size={20} fill={t.text} />
         </g>
       ) : null}
-      {o.showBrand ? <Text x={M} y={156} lines={c.name} font={f.label} size={20} tracking={-0.01} fill={t.text} opacity={0.65} /> : null}
-      <Text x={M - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.04} fill={t.text} />
-      <BlockText b={desc} x={M} font={f.body} fill={t.text} opacity={0.68} />
-      {o.showMeta ? <Text x={M} y={H - 52} lines={ellipsize(c.domain, f.label, 15, 420)} font={f.label} size={15} fill={t.text} /> : null}
+      <Text x={M - 3} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.04} fill={t.text} />
+      {desc.bottom < 580 ? <BlockText b={desc} x={M} font={f.body} fill={t.text} opacity={0.62} /> : null}
+
+      <rect x={win.x + 8} y={win.y + 24} width={win.w} height={win.h} rx={16} fill="#000000" opacity={0.1} />
+      <rect x={win.x} y={win.y} width={win.w} height={win.h} rx={16} fill="#ffffff" stroke="#000000" strokeOpacity={0.08} />
+      {[0, 1, 2].map((i) => (
+        <circle key={i} cx={win.x + 24 + i * 18} cy={win.y + 23} r={5.5} fill={mix(t.text, '#ffffff', 0.82)} />
+      ))}
+      <rect x={win.x + win.w / 2 - urlW / 2 - 40} y={win.y + 10} width={urlW} height={26} rx={13} fill={mix(t.text, '#ffffff', 0.94)} />
+      <Text x={win.x + win.w / 2 - 40} y={win.y + 28} anchor="middle" lines={url} font={f.mono} size={13} fill={t.text} opacity={0.6} />
+      <line x1={win.x} x2={win.x + win.w} y1={inner.y} y2={inner.y} stroke="#000000" strokeOpacity={0.07} />
+      <clipPath id={`${uid}-inner`}>
+        <rect x={inner.x} y={inner.y} width={inner.w} height={inner.h} />
+      </clipPath>
+      {assets.screenshot ? (
+        <image href={assets.screenshot} x={inner.x} y={inner.y} width={inner.w} height={inner.h} preserveAspectRatio="xMidYMin slice" clipPath={`url(#${uid}-inner)`} />
+      ) : (
+        <g clipPath={`url(#${uid}-inner)`}>
+          <rect x={inner.x} y={inner.y} width={inner.w} height={inner.h} fill={t.primary} />
+          <path d={ditherPath({ x: inner.x, y: inner.y, w: inner.w, h: inner.h, cell: 9, f: (u, v) => Math.max(0, 1.05 - Math.hypot((u - 0.75) * 1.1, (v - 0.85) * 1.4)) * 0.95 })} fill={t.accent} />
+          <Mark x={inner.x + 36} y={inner.y + 30} size={30} assets={assets} name={c.name} uid={`${uid}-n`} fill="#ffffff" color={t.primary} font={f.display} shape="rounded" />
+          <Text x={inner.x + 78} y={inner.y + 51} lines={c.name} font={f.label} size={17} fill="#ffffff" />
+          {c.badge ? (
+            <g>
+              <rect x={inner.x + 40} y={inner.y + 126} width={badgeW} height={28} rx={14} fill="#ffffff" fillOpacity={0.14} />
+              <Text x={inner.x + 40 + badgeW / 2} y={inner.y + 145} anchor="middle" lines={c.badge} font={f.label} size={13} fill="#ffffff" />
+            </g>
+          ) : null}
+          <Text x={inner.x + 38} y={inner.y + 236} lines={hero.text} font={f.display} size={hero.size} tracking={-0.045} fill="#ffffff" />
+        </g>
+      )}
     </Frame>
   )
 }
@@ -84,14 +69,15 @@ export const showcase: TemplateDef = {
   number: 27,
   name: 'Showcase',
   collection: 'product',
-  description: 'A browser window that bleeds off the canvas: your screenshot, or a live mini landing page.',
+  description: 'Your product in a browser window bleeding off the edge — your screenshot, or a dithered hero — on a soft glow.',
   fonts: {
-    display: { family: 'Inter Tight', weight: 600 },
-    label: { family: 'Inter Tight', weight: 500 },
-    body: { family: 'Inter Tight', weight: 400 },
+    display: { family: 'Geist', weight: 600 },
+    label: { family: 'Geist', weight: 500 },
+    body: { family: 'Geist', weight: 400 },
+    mono: { family: 'Geist Mono', weight: 400 },
   },
-  theme: { primary: '#1c2a4a', accent: '#f25a2a', background: '#f2f0eb', text: '#141414' },
-  limits: { headline: 56, description: 110 },
+  theme: { primary: '#14161f', accent: '#ff6a3d', background: '#f4f2ee', text: '#121212' },
+  limits: { headline: 60, description: 110 },
   uses: ['screenshot', 'logo', 'badge'],
   render: Showcase,
 }

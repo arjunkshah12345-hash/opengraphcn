@@ -1,4 +1,4 @@
-import { blockTop, join, slugify, Spans } from '../core/kit'
+import { blockTop, dotGridPath, join, slugify, Spans } from '../core/kit'
 import { Frame, Text } from '../core/primitives'
 import { ellipsize, measure, vmetrics } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
@@ -19,8 +19,8 @@ function Terminal({ content: c, theme: t, options: o, fonts: f, uid }: TemplateP
   const slug = slugify(c.name)
   const x = wx + 44
   const s = o.scale
-  const head = blockTop(c.headline, { font: f.display, maxWidth: ww - 110, maxLines: 3, max: 76 * s, min: 34, lineHeight: 1.08, tracking: -0.03, top: 232, maxHeight: 210 })
-  const lastW = measure(head.lines[head.lines.length - 1] ?? '', f.display, head.size, -0.03)
+  const head = blockTop(c.headline, { font: f.display, maxWidth: ww - 110, maxLines: 3, max: 88 * s, min: 34, lineHeight: 1.06, tracking: -0.035, top: 226, maxHeight: 220 })
+  const lastW = measure(head.lines[head.lines.length - 1] ?? '', f.display, head.size, -0.035)
   const descY = head.last + Math.max(58, head.size * 0.9)
   const statusY = wy + wh - 40
   return (
@@ -32,6 +32,7 @@ function Terminal({ content: c, theme: t, options: o, fonts: f, uid }: TemplateP
         </radialGradient>
       </defs>
       <rect width={W} height={H} fill={`url(#${uid}-glow)`} />
+      <path d={dotGridPath({ x: 12, y: 12, w: W - 24, h: H - 24, gap: 24, size: 1.4 })} fill={t.text} opacity={0.07} />
       <rect x={wx} y={wy} width={ww} height={wh} rx={14} fill={win} stroke="#ffffff" strokeOpacity={0.09} />
       {[0, 1, 2].map((i) => (
         <circle key={i} cx={wx + 28 + i * 22} cy={wy + 24} r={6.5} fill="#ffffff" fillOpacity={0.13} />
@@ -52,8 +53,8 @@ function Terminal({ content: c, theme: t, options: o, fonts: f, uid }: TemplateP
           { text: ellipsize(`npx create-${slug}@latest`, f.mono, 22, ww - 110 - measure(`› ~/${slug} on main `, f.mono, 22)), fill: t.text },
         ]}
       />
-      <Text x={x} y={wy + 142} lines={ellipsize(`  resolved ${c.domain}  ·  ready in 0.4s`, f.mono, 18, ww - 110)} font={f.mono} size={18} fill={dim} />
-      <Text x={x - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.03} fill={t.text} />
+      <Text x={x} y={wy + 142} lines={ellipsize(`  open https://${c.domain}`, f.mono, 18, ww - 110)} font={f.mono} size={18} fill={dim} />
+      <Text x={x - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.035} fill={t.text} />
       <rect x={x + lastW + head.size * 0.12} y={head.last - vmetrics(f.display, head.size).cap} width={head.size * 0.52} height={vmetrics(f.display, head.size).cap * 1.12} fill={t.accent} />
       {c.description && descY < statusY - 20 ? (
         <Text x={x} y={descY} lines={ellipsize(`# ${c.description}`, f.mono, 21, ww - 110)} font={f.mono} size={21} fill={dim} />

@@ -12,7 +12,7 @@ const H = 630
 function System({ content: c, theme: t, options: o, fonts: f, uid }: TemplateProps) {
   const M = 64
   const s = o.scale
-  const head = blockTop(c.headline, { font: f.display, maxWidth: 470, maxLines: 4, max: 60 * s, min: 30, lineHeight: 1.02, tracking: -0.035, top: 132, maxHeight: 250 })
+  const head = blockTop(c.headline, { font: f.display, maxWidth: 470, maxLines: 4, max: 70 * s, min: 30, lineHeight: 1.0, tracking: -0.04, top: 132, maxHeight: 250 })
   const desc = blockTop(c.description, { font: f.body, maxWidth: 440, maxLines: 3, max: 20, min: 16, lineHeight: 1.42, top: head.bottom + 24 })
   const line = mix(t.text, t.background, 0.55)
   type N = { x: number; y: number; w: number; h: number; label: string; sub?: string; core?: boolean }
@@ -47,7 +47,7 @@ function System({ content: c, theme: t, options: o, fonts: f, uid }: TemplatePro
       </defs>
       <rect width={W} height={H} fill={`url(#${uid}-dots)`} />
       <Text x={M} y={76} lines={caps(join(['System', o.showBrand ? c.name : '', 'v' === c.badge ? '' : c.badge], ' / '))} font={f.mono} size={13} tracking={0.12} fill={t.text} opacity={0.7} />
-      <Text x={M - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.035} fill={t.text} />
+      <Text x={M - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.04} fill={t.text} />
       <BlockText b={desc} x={M} font={f.body} fill={t.text} opacity={0.72} />
       {o.showMeta ? <Text x={M} y={H - 56} lines={join([c.domain, c.category], '  ·  ')} font={f.mono} size={14} fill={t.text} opacity={0.6} /> : null}
       {conn.map((d, i) => (

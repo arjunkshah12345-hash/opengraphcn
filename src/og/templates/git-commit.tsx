@@ -14,7 +14,7 @@ function GitCommit({ content: c, theme: t, options: o, fonts: f }: TemplateProps
   const dim = mix(t.text, t.background, 0.5)
   const sha = shortSha(c.name + c.headline)
   const s = o.scale
-  const head = blockTop(c.headline, { font: f.display, maxWidth: W - x - 80, maxLines: 3, max: 66 * s, min: 32, lineHeight: 1.04, tracking: -0.035, top: 268, maxHeight: 200 })
+  const head = blockTop(c.headline, { font: f.display, maxWidth: W - x - 80, maxLines: 3, max: 84 * s, min: 32, lineHeight: 1.0, tracking: -0.04, top: 262, maxHeight: 220 })
   const desc = blockTop(c.description, { font: f.body, maxWidth: W - x - 120, maxLines: 2, max: 22, min: 17, lineHeight: 1.4, top: head.bottom + 22 })
   const mainX = 128
   const featX = 184
@@ -53,7 +53,7 @@ function GitCommit({ content: c, theme: t, options: o, fonts: f }: TemplateProps
           <Spans x={x} y={headY + 86} size={18} font={f.mono} fill={t.text} parts={[{ text: 'Date:   ', fill: dim }, { text: c.date }]} />
         </g>
       ) : null}
-      <Text x={x - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.035} fill={t.text} />
+      <Text x={x - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.04} fill={t.text} />
       <BlockText b={desc} x={x} font={f.body} fill={dim} />
       {o.showBrand ? (
         <Spans x={x} y={H - 44} size={16} font={f.mono} fill={dim} parts={[{ text: c.name, fill: t.text }, { text: c.domain ? `  ·  ${c.domain}` : '' }]} />

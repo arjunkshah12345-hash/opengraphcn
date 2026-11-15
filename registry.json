@@ -88,7 +88,7 @@
       "name": "monograph",
       "type": "registry:component",
       "title": "Monograph (opengraphcn)",
-      "description": "Large serif headline on warm ivory with issue numbering, fine rules and editorial metadata.",
+      "description": "A towering serif headline on warm paper, a single accent dot and quiet italic notes.",
       "categories": [
         "og-image",
         "editorial"
@@ -108,7 +108,7 @@
       "name": "journal",
       "type": "registry:component",
       "title": "The Journal (opengraphcn)",
-      "description": "A broadsheet front page: blackletter masthead, column rules, drop cap and a Bodoni headline.",
+      "description": "A long-read layout: a bold serif headline beside an italic standfirst and a byline, under a red rule.",
       "categories": [
         "og-image",
         "editorial"
@@ -128,7 +128,7 @@
       "name": "modernist",
       "type": "registry:component",
       "title": "Modernist (opengraphcn)",
-      "description": "Swiss six-column grid, heavy grotesk headline, red signal shapes and a structured metadata stack.",
+      "description": "International Typographic Style: a huge grotesk headline on signal red, six-column grid and a ruled data row.",
       "categories": [
         "og-image",
         "editorial"
@@ -148,7 +148,7 @@
       "name": "type-study",
       "type": "registry:component",
       "title": "Type Study (opengraphcn)",
-      "description": "Your project name as an oversized, cropped specimen with an offset outline and italic headline.",
+      "description": "A type specimen sheet: a giant display glyph measured against cap, x-height and baseline guides.",
       "categories": [
         "og-image",
         "editorial"
@@ -167,8 +167,8 @@
     {
       "name": "cover",
       "type": "registry:component",
-      "title": "The Cover (opengraphcn)",
-      "description": "Magazine cover: towering Didone masthead, italic cover line, sticker badge and a barcode.",
+      "title": "Cover (opengraphcn)",
+      "description": "A clothbound book cover: centred Bodoni on deep navy inside a double gold rule, with an ornament.",
       "categories": [
         "og-image",
         "editorial"
@@ -208,7 +208,7 @@
       "name": "codebase",
       "type": "registry:component",
       "title": "Codebase (opengraphcn)",
-      "description": "Your headline as a doc-comment in a light editor, with line numbers and a real config object.",
+      "description": "A clean grotesk headline beside an editor window with your project as a typed config file.",
       "categories": [
         "og-image",
         "developer"
@@ -288,7 +288,7 @@
       "name": "atmosphere",
       "type": "registry:component",
       "title": "Atmosphere (opengraphcn)",
-      "description": "Soft, blurred colour fields with grain and a centred, softly weighted serif headline.",
+      "description": "A deep, grainy mesh gradient at dusk with a light serif headline anchored bottom-left.",
       "categories": [
         "og-image",
         "abstract"
@@ -308,7 +308,7 @@
       "name": "liquid",
       "type": "registry:component",
       "title": "Liquid (opengraphcn)",
-      "description": "Flowing, layered ribbons of colour with glossy highlights rising across a deep ground.",
+      "description": "Hairline contour lines flow like a topographic map beneath a crisp headline on deep teal.",
       "categories": [
         "og-image",
         "abstract"
@@ -328,7 +328,7 @@
       "name": "chromatic",
       "type": "registry:component",
       "title": "Chromatic (opengraphcn)",
-      "description": "An iridescent ring and pearl sphere with specular highlights on a cool pearl ground.",
+      "description": "A soft iridescent pastel field with a bold rounded headline in near-black.",
       "categories": [
         "og-image",
         "abstract"
@@ -368,7 +368,7 @@
       "name": "spectrum",
       "type": "registry:component",
       "title": "Spectrum (opengraphcn)",
-      "description": "Vertical bands of shifting colour with grain and a towering condensed headline.",
+      "description": "Refracted light: softly blurred spectral columns behind a towering condensed headline.",
       "categories": [
         "og-image",
         "abstract"
@@ -388,7 +388,7 @@
       "name": "nothing",
       "type": "registry:component",
       "title": "Nothing (opengraphcn)",
-      "description": "An almost empty white canvas, one precisely set headline and a single point of colour.",
+      "description": "Black glass and a dot grid: one stark grotesk headline, one red dot, nothing else.",
       "categories": [
         "og-image",
         "minimal"
@@ -448,7 +448,7 @@
       "name": "mono",
       "type": "registry:component",
       "title": "Mono (opengraphcn)",
-      "description": "One hue in disciplined tints: concentric quarter-circles, controlled weights and quiet alignment.",
+      "description": "One colour, every tone: a saturated field with a tinted headline and a ghosted outline of your name.",
       "categories": [
         "og-image",
         "minimal"
@@ -468,7 +468,7 @@
       "name": "frame",
       "type": "registry:component",
       "title": "Frame (opengraphcn)",
-      "description": "A double-ruled frame with diamond corners around a centred, softly weighted serif headline.",
+      "description": "A gallery mat: centred serif on warm paper inside a thick coloured border and a hairline inset.",
       "categories": [
         "og-image",
         "minimal"
@@ -508,7 +508,7 @@
       "name": "pixel",
       "type": "registry:component",
       "title": "Pixel (opengraphcn)",
-      "description": "A generated pixel sprite from your project name, pixel type, a segmented bar and scanlines.",
+      "description": "A 16-bit title screen: a dithered pixel sunset, stepped mountains and a neon grid under pixel type.",
       "categories": [
         "og-image",
         "experimental"
@@ -568,7 +568,7 @@
       "name": "poster",
       "type": "registry:component",
       "title": "Poster (opengraphcn)",
-      "description": "A gig-poster composition: vertical giant name, colliding primary shapes and an off-axis headline.",
+      "description": "A screen-printed gig poster: stacked condensed capitals over an overprinted circle and square.",
       "categories": [
         "og-image",
         "experimental"
@@ -608,7 +608,7 @@
       "name": "showcase",
       "type": "registry:component",
       "title": "Showcase (opengraphcn)",
-      "description": "A browser window that bleeds off the canvas: your screenshot, or a live mini landing page.",
+      "description": "Your product in a browser window bleeding off the edge — your screenshot, or a dithered hero — on a soft glow.",
       "categories": [
         "og-image",
         "product"
@@ -628,7 +628,7 @@
       "name": "announcement",
       "type": "registry:component",
       "title": "Announcement (opengraphcn)",
-      "description": "Product update with an italic serif headline and a ticked release seal carrying version and date.",
+      "description": "A release card: your version number set huge over a dithered heat glow, with the headline beside it.",
       "categories": [
         "og-image",
         "product"
@@ -648,7 +648,7 @@
       "name": "founder",
       "type": "registry:component",
       "title": "Founder (opengraphcn)",
-      "description": "A maker card: portrait (or monogram), name with a hand-drawn underline and a quoted tagline.",
+      "description": "A pull quote: your headline in a large italic serif with a hanging quotation mark and the author beneath.",
       "categories": [
         "og-image",
         "product"

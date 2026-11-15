@@ -1,60 +1,37 @@
-import { blockTop, caps } from '../core/kit'
+import { BlockText, blockTop, caps, join, Mark } from '../core/kit'
 import { Frame, Grain, Text } from '../core/primitives'
-import { fitLine, measure, wrapVariable } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
 import { OgImage, type OgImageProps } from '../core/render'
 
 const W = 1200
 /* ─────────────────────────── 02 · The Journal ─────────────────────────── */
 
-function Journal({ content: c, theme: t, options: o, fonts: f, uid }: TemplateProps) {
-  const M = 64
+function Journal({ content: c, theme: t, assets, options: o, fonts: f, uid }: TemplateProps) {
+  const M = 80
   const s = o.scale
-  const ink = t.text
-  const mast = fitLine(c.name || 'The Journal', f.mast, 84, 40, 860)
-  const colX = 832
-  const colW = W - M - colX
-  const head = blockTop(c.headline, { font: f.display, maxWidth: 712, maxLines: 4, max: 78 * s, min: 38, lineHeight: 1.0, tracking: -0.012, top: 222, maxHeight: 268 })
-  const bylineY = Math.min(head.bottom + 34, 548)
-  // drop-cap paragraph
-  const text = c.description.trim()
-  const letter = text.slice(0, 1)
-  const rest = text.slice(1)
-  const bodySize = 19
-  const dropSize = 70
-  const dropW = letter ? measure(letter, f.display, dropSize) + 10 : 0
-  const lines = rest ? wrapVariable(rest, f.body, bodySize, (i) => (i < 2 ? colW - dropW : colW), 9) : []
-  const bodyTop = 262
+  const split = 776
+  const head = blockTop(c.headline, { font: f.display, maxWidth: split - M - 56, maxLines: 4, max: 92 * s, min: 40, lineHeight: 1.0, tracking: -0.028, top: 168, maxHeight: 330 })
+  const dek = blockTop(c.description, { font: f.italic, maxWidth: W - M - split - 40, maxLines: 6, max: 27, min: 18, lineHeight: 1.32, top: 176, maxHeight: 220 })
+  const who = c.author || c.name
   return (
     <Frame background={t.background}>
-      <Grain uid={uid} opacity={0.06} />
+      <Grain uid={uid} opacity={0.05} />
+      <rect x={0} y={0} width={W} height={8} fill={t.accent} />
+      <Text x={M} y={104} lines={caps(join(['Essay', c.category], '  —  '))} font={f.label} size={14} tracking={0.18} fill={t.accent} />
+      {o.showMeta && c.badge ? <Text x={W - M} y={104} anchor="end" lines={caps(c.badge)} font={f.label} size={14} tracking={0.18} fill={t.text} opacity={0.5} /> : null}
+      <Text x={M - 3} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.028} fill={t.text} />
+      <line x1={split} x2={split} y1={150} y2={500} stroke={t.text} strokeOpacity={0.14} />
+      <BlockText b={dek} x={split + 40} font={f.italic} fill={t.text} opacity={0.78} />
       {o.showMeta ? (
         <g>
-          <Text x={M} y={46} lines="VOL. I — NO. 1" font={f.label} size={12} tracking={0.18} fill={ink} />
-          <Text x={W / 2} y={46} anchor="middle" lines={caps(c.date)} font={f.label} size={12} tracking={0.18} fill={ink} />
-          <Text x={W - M} y={46} anchor="end" lines={caps(c.domain)} font={f.label} size={12} tracking={0.18} fill={ink} />
+          <Mark x={split + 40} y={436} size={52} assets={{ logo: assets.avatar }} name={who} uid={`${uid}-a`} fill={t.text} color={t.background} font={f.display} shape="circle" />
+          <Text x={split + 108} y={458} lines={who} font={f.label} size={18} fill={t.text} />
+          <Text x={split + 108} y={484} lines={c.date} font={f.italic} size={18} fill={t.text} opacity={0.6} />
         </g>
       ) : null}
-      <line x1={M} x2={W - M} y1={60} y2={60} stroke={ink} strokeWidth={0.8} />
-      {o.showBrand ? <Text x={W / 2} y={132} anchor="middle" lines={mast.text} font={f.mast} size={mast.size} fill={ink} /> : null}
-      <line x1={M} x2={W - M} y1={152} y2={152} stroke={ink} strokeWidth={2.4} />
-      <line x1={M} x2={W - M} y1={157.5} y2={157.5} stroke={ink} strokeWidth={0.8} />
-      <Text x={M} y={180} lines={caps(c.category)} font={f.label} size={12} tracking={0.18} fill={t.accent} />
-      {[-18, 0, 18].map((d) => (
-        <rect key={d} x={W / 2 + d - 3} y={172} width={6} height={6} transform={`rotate(45 ${W / 2 + d} 175)`} fill={ink} opacity={0.55} />
-      ))}
-      <Text x={W - M} y={180} anchor="end" lines={caps(c.badge)} font={f.label} size={12} tracking={0.18} fill={ink} />
-      <line x1={M} x2={W - M} y1={194} y2={194} stroke={ink} strokeWidth={0.8} />
-      <Text x={M - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.012} fill={ink} />
-      {c.author ? <Text x={M} y={bylineY} lines={`By ${c.author}`} font={f.bodyItalic} size={21} fill={ink} opacity={0.75} /> : null}
-      <line x1={804} x2={804} y1={214} y2={562} stroke={ink} strokeWidth={0.8} />
-      <Text x={colX} y={236} lines={caps('The brief')} font={f.label} size={11} tracking={0.2} fill={t.accent} />
-      {letter ? <Text x={colX - 2} y={bodyTop + dropSize * 0.62} lines={letter} font={f.display} size={dropSize} fill={ink} /> : null}
-      <Text x={colX} y={bodyTop + 12} lines={lines.slice(0, 2)} font={f.body} size={bodySize} lh={1.42} fill={ink} transform={`translate(${dropW} 0)`} />
-      <Text x={colX} y={bodyTop + 12 + 2 * bodySize * 1.42} lines={lines.slice(2)} font={f.body} size={bodySize} lh={1.42} fill={ink} />
-      <line x1={M} x2={W - M} y1={574} y2={574} stroke={ink} strokeWidth={0.8} />
-      <Text x={M} y={600} lines={`Continued at ${c.domain}`} font={f.body} size={16} fill={ink} opacity={0.7} />
-      <Text x={W - M} y={600} anchor="end" lines="PAGE A1" font={f.label} size={12} tracking={0.18} fill={ink} opacity={0.7} />
+      <line x1={M} x2={W - M} y1={552} y2={552} stroke={t.text} strokeOpacity={0.9} strokeWidth={1.5} />
+      {o.showBrand ? <Text x={M} y={592} lines={c.name} font={f.display} size={26} tracking={-0.02} fill={t.text} /> : null}
+      {o.showMeta ? <Text x={W - M} y={590} anchor="end" lines={caps(c.domain)} font={f.label} size={13} tracking={0.18} fill={t.text} opacity={0.6} /> : null}
     </Frame>
   )
 }
@@ -64,17 +41,15 @@ export const journal: TemplateDef = {
   number: 2,
   name: 'The Journal',
   collection: 'editorial',
-  description: 'A broadsheet front page: blackletter masthead, column rules, drop cap and a Bodoni headline.',
+  description: 'A long-read layout: a bold serif headline beside an italic standfirst and a byline, under a red rule.',
   fonts: {
-    display: { family: 'Bodoni Moda', weight: 800 },
-    mast: { family: 'UnifrakturMaguntia', weight: 400 },
-    body: { family: 'Newsreader', weight: 400 },
-    bodyItalic: { family: 'Newsreader', weight: 400, style: 'italic' },
+    display: { family: 'Newsreader', weight: 600 },
+    italic: { family: 'Newsreader', weight: 400, style: 'italic' },
     label: { family: 'Inter Tight', weight: 600 },
   },
-  theme: { primary: '#141414', accent: '#9b1c1c', background: '#f2ede1', text: '#141414' },
-  limits: { headline: 70, description: 220 },
-  uses: ['date', 'category', 'badge', 'author'],
+  theme: { primary: '#141414', accent: '#c4271c', background: '#faf8f3', text: '#141414' },
+  limits: { headline: 70, description: 140 },
+  uses: ['date', 'category', 'badge', 'author', 'avatar'],
   render: Journal,
 }
 

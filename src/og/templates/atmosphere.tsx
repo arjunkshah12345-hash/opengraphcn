@@ -1,42 +1,34 @@
-import { BlockText, blockCenter, blockTop, caps, join } from '../core/kit'
+import { BlockText, blockBottom, Blob, caps, Mark } from '../core/kit'
 import { Frame, Grain, Text } from '../core/primitives'
 import type { TemplateDef, TemplateProps } from '../core/types'
 import { hueShift } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
 
 const W = 1200
-const H = 630
 /* ─────────────────────────── 11 · Atmosphere ─────────────────────────── */
 
-function Atmosphere({ content: c, theme: t, options: o, fonts: f, uid }: TemplateProps) {
+function Atmosphere({ content: c, theme: t, options: o, fonts: f, uid, assets }: TemplateProps) {
+  const M = 72
   const s = o.scale
-  const c3 = hueShift(t.primary, 38)
-  const c4 = hueShift(t.accent, -50)
-  const head = blockCenter(c.headline, { font: f.display, maxWidth: 960, maxLines: 3, max: 92 * s, min: 40, lineHeight: 1.0, tracking: -0.025, center: 292, maxHeight: 300 })
-  const desc = blockTop(c.description, { font: f.body, maxWidth: 640, maxLines: 2, max: 22, min: 17, lineHeight: 1.4, top: head.bottom + 30 })
+  const desc = c.description ? blockBottom(c.description, { font: f.body, maxWidth: 560, maxLines: 2, max: 22, min: 16, lineHeight: 1.4, bottom: 560 }) : null
+  const bottom = desc ? desc.y - desc.size - 30 : 560
+  const head = blockBottom(c.headline, { font: f.display, maxWidth: 960, maxLines: 3, max: 112 * s, min: 44, lineHeight: 0.98, tracking: -0.03, bottom, maxHeight: bottom - 150 })
   return (
     <Frame background={t.background}>
-      <defs>
-        <filter id={`${uid}-blur`} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation={95} />
-        </filter>
-        <radialGradient id={`${uid}-veil`} cx="0.5" cy="0.5" r="0.55">
-          <stop offset="0" stopColor={t.background} stopOpacity={0.55} />
-          <stop offset="1" stopColor={t.background} stopOpacity={0} />
-        </radialGradient>
-      </defs>
-      <g filter={`url(#${uid}-blur)`}>
-        <circle cx={230} cy={120} r={290} fill={t.primary} />
-        <circle cx={1000} cy={110} r={270} fill={t.accent} />
-        <circle cx={860} cy={600} r={300} fill={c3} />
-        <circle cx={170} cy={640} r={250} fill={c4} />
-      </g>
-      <rect width={W} height={H} fill={`url(#${uid}-veil)`} />
-      <Grain uid={uid} opacity={0.16} blend="overlay" freq={0.75} />
-      {o.showBrand ? <Text x={W / 2} y={84} anchor="middle" lines={caps(c.name)} font={f.label} size={14} tracking={0.3} fill={t.text} /> : null}
-      <Text x={W / 2} y={head.y} anchor="middle" lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.025} fill={t.text} />
-      <BlockText b={desc} x={W / 2} anchor="middle" font={f.body} fill={t.text} opacity={0.75} />
-      {o.showMeta ? <Text x={W / 2} y={H - 64} anchor="middle" lines={caps(join([c.domain, c.date], '   ·   '))} font={f.label} size={12} tracking={0.24} fill={t.text} opacity={0.7} /> : null}
+      <Blob uid={uid} id="a" cx={980} cy={90} rx={360} ry={260} fill={t.accent} blur={110} opacity={0.95} />
+      <Blob uid={uid} id="b" cx={640} cy={340} rx={260} ry={200} fill={hueShift(t.accent, 60)} blur={120} opacity={0.75} />
+      <Blob uid={uid} id="c" cx={1120} cy={560} rx={300} ry={200} fill={t.primary} blur={110} opacity={0.9} />
+      <Blob uid={uid} id="d" cx={160} cy={-40} rx={260} ry={160} fill={hueShift(t.primary, -40)} blur={110} opacity={0.35} />
+      <Grain uid={uid} opacity={0.16} freq={0.75} blend="overlay" />
+      {o.showBrand ? (
+        <g>
+          <Mark x={M} y={62} size={34} assets={assets} name={c.name} uid={uid} fill={t.text} color={t.background} font={f.label} shape="circle" />
+          <Text x={M + 48} y={85} lines={c.name} font={f.label} size={20} tracking={-0.01} fill={t.text} />
+        </g>
+      ) : null}
+      {o.showMeta ? <Text x={W - M} y={85} anchor="end" lines={caps(c.date)} font={f.label} size={14} tracking={0.14} fill={t.text} opacity={0.7} /> : null}
+      <Text x={M - 4} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.03} fill={t.text} />
+      {desc ? <BlockText b={desc} x={M} font={f.body} fill={t.text} opacity={0.72} /> : null}
     </Frame>
   )
 }
@@ -46,15 +38,15 @@ export const atmosphere: TemplateDef = {
   number: 11,
   name: 'Atmosphere',
   collection: 'abstract',
-  description: 'Soft, blurred colour fields with grain and a centred, softly weighted serif headline.',
+  description: 'A deep, grainy mesh gradient at dusk with a light serif headline anchored bottom-left.',
   fonts: {
     display: { family: 'Fraunces', weight: 300 },
     body: { family: 'Inter Tight', weight: 400 },
     label: { family: 'Inter Tight', weight: 500 },
   },
-  theme: { primary: '#ff8f6b', accent: '#7fb0ff', background: '#f3eee8', text: '#1d1a17' },
-  limits: { headline: 64, description: 110 },
-  uses: ['date'],
+  theme: { primary: '#ff6b4a', accent: '#6f63ff', background: '#0b0910', text: '#fbf7f2' },
+  limits: { headline: 60, description: 110 },
+  uses: ['date', 'logo'],
   render: Atmosphere,
 }
 

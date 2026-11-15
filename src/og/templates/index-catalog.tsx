@@ -19,7 +19,7 @@ function Index({ content: c, theme: t, options: o, fonts: f }: TemplateProps) {
   const rows: { n: string; k: string; h: number; node: (y: number) => ReactElement }[] = []
   if (o.showBrand)
     rows.push({ n: '01', k: 'Project', h: 64, node: (y) => <Text x={vx} y={y + 40} lines={fitLine(c.name, f.label, 26, 16, vw).text} font={f.label} size={26} tracking={-0.02} fill={t.text} /> })
-  const head = blockTop(c.headline, { font: f.display, maxWidth: vw, maxLines: 3, max: 62 * s, min: 28, lineHeight: 1.06, tracking: -0.03, top: 0, maxHeight: 200 })
+  const head = blockTop(c.headline, { font: f.display, maxWidth: vw, maxLines: 3, max: 78 * s, min: 28, lineHeight: 1.02, tracking: -0.03, top: 0, maxHeight: 200 })
   rows.push({ n: '02', k: 'Headline', h: head.last - head.y + head.size * 0.24 + 56 + head.y, node: (y) => <Text x={vx - 2} y={y + 28 + head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.03} fill={t.text} /> })
   const desc = blockTop(c.description, { font: f.body, maxWidth: vw - 80, maxLines: 2, max: 19, min: 15, lineHeight: 1.4, top: 0 })
   if (c.description) rows.push({ n: '03', k: 'Summary', h: desc.last + 44, node: (y) => <Text x={vx} y={y + 24 + desc.y} lines={desc.lines} font={f.body} size={desc.size} lh={desc.lh} fill={t.text} opacity={0.7} /> })
