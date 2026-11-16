@@ -1,34 +1,26 @@
-import { BlockText, blockBottom, Blob, caps, Mark } from '../core/kit'
-import { Frame, Grain, Text } from '../core/primitives'
+import { blockBottom, Blob, Brand, Torus } from '../core/kit'
+import { Frame, Text } from '../core/primitives'
 import type { TemplateDef, TemplateProps } from '../core/types'
-import { hueShift } from '../core/utils'
+import { mix } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
 
-const W = 1200
 /* ─────────────────────────── 11 · Atmosphere ─────────────────────────── */
 
 function Atmosphere({ content: c, theme: t, options: o, fonts: f, uid, assets }: TemplateProps) {
   const M = 72
-  const s = o.scale
-  const desc = c.description ? blockBottom(c.description, { font: f.body, maxWidth: 560, maxLines: 2, max: 22, min: 16, lineHeight: 1.4, bottom: 560 }) : null
-  const bottom = desc ? desc.y - desc.size - 30 : 560
-  const head = blockBottom(c.headline, { font: f.display, maxWidth: 960, maxLines: 3, max: 112 * s, min: 44, lineHeight: 0.98, tracking: -0.03, bottom, maxHeight: bottom - 150 })
+  const head = blockBottom(c.headline, { font: f.display, maxWidth: 700, maxLines: 3, max: 64 * o.scale, min: 32, lineHeight: 1.06, tracking: -0.035, bottom: 548, maxHeight: 260 })
   return (
     <Frame background={t.background}>
-      <Blob uid={uid} id="a" cx={980} cy={90} rx={360} ry={260} fill={t.accent} blur={110} opacity={0.95} />
-      <Blob uid={uid} id="b" cx={640} cy={340} rx={260} ry={200} fill={hueShift(t.accent, 60)} blur={120} opacity={0.75} />
-      <Blob uid={uid} id="c" cx={1120} cy={560} rx={300} ry={200} fill={t.primary} blur={110} opacity={0.9} />
-      <Blob uid={uid} id="d" cx={160} cy={-40} rx={260} ry={160} fill={hueShift(t.primary, -40)} blur={110} opacity={0.35} />
-      <Grain uid={uid} opacity={0.16} freq={0.75} blend="overlay" />
-      {o.showBrand ? (
-        <g>
-          <Mark x={M} y={62} size={34} assets={assets} name={c.name} uid={uid} fill={t.text} color={t.background} font={f.label} shape="circle" />
-          <Text x={M + 48} y={85} lines={c.name} font={f.label} size={20} tracking={-0.01} fill={t.text} />
-        </g>
-      ) : null}
-      {o.showMeta ? <Text x={W - M} y={85} anchor="end" lines={caps(c.date)} font={f.label} size={14} tracking={0.14} fill={t.text} opacity={0.7} /> : null}
-      <Text x={M - 4} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.03} fill={t.text} />
-      {desc ? <BlockText b={desc} x={M} font={f.body} fill={t.text} opacity={0.72} /> : null}
+      <defs>
+        <linearGradient id={`${uid}-head`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor={t.text} />
+          <stop offset="1" stopColor={mix(t.text, t.primary, 0.55)} />
+        </linearGradient>
+      </defs>
+      <Blob uid={uid} id="g" cx={860} cy={150} rx={360} ry={260} fill={t.primary} blur={120} opacity={0.35} />
+      <Torus uid={uid} cx={880} cy={200} r={200} thick={64} tilt={0.62} rot={-28} colors={[mix(t.primary, '#000000', 0.55), t.primary, mix(t.accent, '#ffffff', 0.35)]} />
+      {o.showBrand ? <Brand x={M} y={64} size={38} assets={assets} name={c.name} uid={uid} font={f.label} fill={t.text} bg={t.background} shape="circle" /> : null}
+      <Text x={M - 3} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.035} fill={`url(#${uid}-head)`} />
     </Frame>
   )
 }
@@ -38,15 +30,14 @@ export const atmosphere: TemplateDef = {
   number: 11,
   name: 'Atmosphere',
   collection: 'abstract',
-  description: 'A deep, grainy mesh gradient at dusk with a light serif headline anchored bottom-left.',
+  description: 'A glossy 3D ring floating in deep blue light above a clean headline that fades into the accent.',
   fonts: {
-    display: { family: 'Fraunces', weight: 300 },
-    body: { family: 'Inter Tight', weight: 400 },
-    label: { family: 'Inter Tight', weight: 500 },
+    display: { family: 'Inter Tight', weight: 500 },
+    label: { family: 'Inter Tight', weight: 600 },
   },
-  theme: { primary: '#ff6b4a', accent: '#6f63ff', background: '#0b0910', text: '#fbf7f2' },
-  limits: { headline: 60, description: 110 },
-  uses: ['date', 'logo'],
+  theme: { primary: '#3b6cff', accent: '#5ea1ff', background: '#0b0d17', text: '#ffffff' },
+  limits: { headline: 50 },
+  uses: ['logo'],
   render: Atmosphere,
 }
 

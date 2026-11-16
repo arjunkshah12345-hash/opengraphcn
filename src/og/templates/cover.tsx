@@ -1,37 +1,45 @@
-import { balance, fit, vmetrics } from '../core/text'
-import { caps, join } from '../core/kit'
-import { Frame, Grain, Text } from '../core/primitives'
+import { blockTop, Brand, ribbonPaths } from '../core/kit'
+import { Frame, Text } from '../core/primitives'
+import { fitLine } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
+import { hueShift } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
 
-const W = 1200
 const H = 630
 /* ─────────────────────────── 05 · Cover ─────────────────────────── */
 
-function Cover({ content: c, theme: t, options: o, fonts: f, uid }: TemplateProps) {
-  const s = o.scale
-  const r = fit(c.headline, { font: f.display, maxWidth: 900, maxLines: 3, max: 96 * s, min: 40, lineHeight: 1.04, tracking: -0.015, maxHeight: 280 })
-  const lines = r.truncated ? r.lines : balance(c.headline, f.display, r.size, 900, -0.015)
-  const cap = vmetrics(f.display, r.size).cap
-  const blockH = cap + (lines.length - 1) * r.size * 1.04
-  const y0 = 300 - blockH / 2 + cap
-  const last = y0 + (lines.length - 1) * r.size * 1.04
-  const desc = c.description ? fit(c.description, { font: f.italic, maxWidth: 760, maxLines: 1, max: 26, min: 17 }) : null
-  const orn = last + 52
+function Cover({ content: c, theme: t, options: o, fonts: f, assets, uid }: TemplateProps) {
+  const split = 600
+  const x = split + 52
+  const head = blockTop(c.headline, { font: f.display, maxWidth: 500, maxLines: 4, max: 50 * o.scale, min: 28, lineHeight: 1.04, tracking: -0.025, top: 64, maxHeight: 230 })
+  const date = c.date ? fitLine(c.date, f.display, 44, 24, 480, -0.025) : null
+  const a = ribbonPaths({ n: 90, from: [-80, 600], ctrl1: [140, -40], ctrl2: [420, 820], to: [700, 60], spread: 420, twist: 1.6 })
+  const b = ribbonPaths({ n: 60, from: [-60, 120], ctrl1: [260, 560], ctrl2: [380, -120], to: [680, 520], spread: 260, twist: 0.9 })
   return (
     <Frame background={t.background}>
-      <Grain uid={uid} opacity={0.09} blend="screen" />
-      <rect x={30} y={30} width={W - 60} height={H - 60} fill="none" stroke={t.accent} strokeOpacity={0.7} />
-      <rect x={40} y={40} width={W - 80} height={H - 80} fill="none" stroke={t.accent} strokeOpacity={0.3} />
-      {o.showBrand ? <Text x={W / 2} y={104} anchor="middle" lines={caps(c.name)} font={f.label} size={15} tracking={0.42} fill={t.accent} /> : null}
-      <Text x={W / 2} y={y0} anchor="middle" lines={lines} font={f.display} size={r.size} lh={1.04} tracking={-0.015} fill={t.text} />
-      <g>
-        <line x1={W / 2 - 90} x2={W / 2 - 14} y1={orn} y2={orn} stroke={t.accent} strokeOpacity={0.8} />
-        <rect x={W / 2 - 5} y={orn - 5} width={10} height={10} fill={t.accent} transform={`rotate(45 ${W / 2} ${orn})`} />
-        <line x1={W / 2 + 14} x2={W / 2 + 90} y1={orn} y2={orn} stroke={t.accent} strokeOpacity={0.8} />
+      <defs>
+        <linearGradient id={`${uid}-silk`} x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stopColor={hueShift(t.primary, -40)} />
+          <stop offset="0.4" stopColor={t.primary} />
+          <stop offset="0.75" stopColor={t.accent} />
+          <stop offset="1" stopColor={hueShift(t.accent, 30)} />
+        </linearGradient>
+        <clipPath id={`${uid}-art`}>
+          <rect x={0} y={0} width={split} height={H} />
+        </clipPath>
+      </defs>
+      <rect x={0} y={0} width={split} height={H} fill="#ffffff" />
+      <g clipPath={`url(#${uid}-art)`} fill="none" stroke={`url(#${uid}-silk)`}>
+        {b.map((d, i) => (
+          <path key={`b${i}`} d={d} strokeWidth={2.2} strokeOpacity={0.55} />
+        ))}
+        {a.map((d, i) => (
+          <path key={`a${i}`} d={d} strokeWidth={2.4} strokeOpacity={0.85} />
+        ))}
       </g>
-      {desc ? <Text x={W / 2} y={orn + 52} anchor="middle" lines={desc.lines} font={f.italic} size={desc.size} fill={t.text} opacity={0.72} /> : null}
-      {o.showMeta ? <Text x={W / 2} y={548} anchor="middle" lines={caps(join([c.author, c.date], '   ·   '))} font={f.label} size={14} tracking={0.32} fill={t.text} opacity={0.75} /> : null}
+      <Text x={x - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.025} fill={t.text} />
+      {date && o.showMeta ? <Text x={1200 - 64} y={360} anchor="end" lines={date.text} font={f.display} size={date.size} tracking={-0.025} fill={t.text} /> : null}
+      {o.showBrand ? <Brand x={x} y={530} size={42} assets={assets} name={c.name} uid={uid} font={f.label} fill={t.text} bg={t.background} /> : null}
     </Frame>
   )
 }
@@ -41,15 +49,14 @@ export const cover: TemplateDef = {
   number: 5,
   name: 'Cover',
   collection: 'editorial',
-  description: 'A clothbound book cover: centred Bodoni on deep navy inside a double gold rule, with an ornament.',
+  description: 'An event poster: a silk ribbon of hairlines on white beside a deep violet panel with the headline and date.',
   fonts: {
-    display: { family: 'Bodoni Moda', weight: 500 },
-    italic: { family: 'Bodoni Moda', weight: 500, style: 'italic' },
-    label: { family: 'Inter Tight', weight: 500 },
+    display: { family: 'Inter Tight', weight: 500 },
+    label: { family: 'Inter Tight', weight: 600 },
   },
-  theme: { primary: '#f2e8d2', accent: '#d2ab62', background: '#101b2e', text: '#f2e8d2' },
-  limits: { headline: 60, description: 90 },
-  uses: ['author', 'date'],
+  theme: { primary: '#7b3bff', accent: '#ff4f9a', background: '#2a0a5e', text: '#ffffff' },
+  limits: { headline: 60 },
+  uses: ['date', 'logo'],
   render: Cover,
 }
 

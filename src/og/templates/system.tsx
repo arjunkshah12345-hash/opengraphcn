@@ -1,76 +1,46 @@
-import { Arrow, BlockText, blockTop, caps, join } from '../core/kit'
+import { blockBottom, Guides, Mark } from '../core/kit'
 import { Frame, Text } from '../core/primitives'
-import { ellipsize, fitLine } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
-import { mix } from '../core/utils'
+import { hash, r2, rng } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
 
 const W = 1200
 const H = 630
 /* ─────────────────────────── 10 · System ─────────────────────────── */
 
-function System({ content: c, theme: t, options: o, fonts: f, uid }: TemplateProps) {
-  const M = 64
-  const s = o.scale
-  const head = blockTop(c.headline, { font: f.display, maxWidth: 470, maxLines: 4, max: 70 * s, min: 30, lineHeight: 1.0, tracking: -0.04, top: 132, maxHeight: 250 })
-  const desc = blockTop(c.description, { font: f.body, maxWidth: 440, maxLines: 3, max: 20, min: 16, lineHeight: 1.42, top: head.bottom + 24 })
-  const line = mix(t.text, t.background, 0.55)
-  type N = { x: number; y: number; w: number; h: number; label: string; sub?: string; core?: boolean }
-  const core: N = { x: 790, y: 262, w: 236, h: 96, label: c.name, sub: c.badge, core: true }
-  const nodes: N[] = [
-    { x: 600, y: 120, w: 150, h: 56, label: 'client', sub: 'browser' },
-    { x: 600, y: 452, w: 150, h: 56, label: 'edge', sub: 'cdn' },
-    { x: 980, y: 104, w: 168, h: 56, label: 'api', sub: c.domain || 'https' },
-    { x: 1000, y: 470, w: 148, h: 56, label: 'store', sub: 'kv' },
-  ]
-  const conn = [
-    `M 675 176 L 675 310 L 790 310`,
-    `M 675 452 L 675 334 L 790 334`,
-    `M 1064 160 L 1064 262`,
-    `M 1074 470 L 1074 358`,
-  ]
-  const labels = [
-    { x: 686, y: 248, t: 'https' },
-    { x: 686, y: 412, t: 'cache' },
-    { x: 1074, y: 220, t: 'rpc' },
-    { x: 1084, y: 424, t: 'write' },
-  ]
+function bars(seed: number, x0: number, x1: number) {
+  const rand = rng(seed)
+  let d = ''
+  let x = x0
+  while (x < x1) {
+    const block = 8 + Math.floor(rand() * 18)
+    const top = 40 + rand() * 200
+    const bottom = H - 40 - rand() * 200
+    for (let i = 0; i < block && x < x1; i++) {
+      const w = rand() < 0.2 ? 3 : 1.5
+      if (rand() > 0.25) {
+        const y0 = top + rand() * 30
+        const y1 = rand() < 0.5 ? bottom - rand() * 120 : bottom
+        d += `M${r2(x)} ${r2(y0)}h${w}V${r2(y1)}h-${w}z`
+      }
+      x += w + 3 + rand() * 3
+    }
+    x += 10 + rand() * 30
+  }
+  return d
+}
+
+function System({ content: c, theme: t, options: o, fonts: f, assets, uid }: TemplateProps) {
+  const M = 72
+  const split = 780
+  const head = blockBottom(c.headline, { font: f.display, maxWidth: split - M - 40, maxLines: 3, max: 72 * o.scale, min: 34, lineHeight: 1.04, tracking: -0.04, bottom: 540, maxHeight: 300 })
   return (
     <Frame background={t.background}>
-      <defs>
-        <pattern id={`${uid}-dots`} width={22} height={22} patternUnits="userSpaceOnUse">
-          <circle cx={1.2} cy={1.2} r={1.2} fill={t.text} fillOpacity={0.14} />
-        </pattern>
-        <marker id={`${uid}-arrow`} viewBox="0 0 10 10" refX={9} refY={5} markerWidth={8} markerHeight={8} orient="auto-start-reverse">
-          <path d="M 0 1 L 9 5 L 0 9 z" fill={line} />
-        </marker>
-      </defs>
-      <rect width={W} height={H} fill={`url(#${uid}-dots)`} />
-      <Text x={M} y={76} lines={caps(join(['System', o.showBrand ? c.name : '', 'v' === c.badge ? '' : c.badge], ' / '))} font={f.mono} size={13} tracking={0.12} fill={t.text} opacity={0.7} />
-      <Text x={M - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.04} fill={t.text} />
-      <BlockText b={desc} x={M} font={f.body} fill={t.text} opacity={0.72} />
-      {o.showMeta ? <Text x={M} y={H - 56} lines={join([c.domain, c.category], '  ·  ')} font={f.mono} size={14} fill={t.text} opacity={0.6} /> : null}
-      {conn.map((d, i) => (
-        <path key={i} d={d} fill="none" stroke={line} strokeWidth={1.6} markerEnd={`url(#${uid}-arrow)`} strokeDasharray={i === 1 ? '5 5' : undefined} />
-      ))}
-      {labels.map((l) => (
-        <Text key={l.t} x={l.x} y={l.y} lines={l.t} font={f.mono} size={12} fill={t.text} opacity={0.6} />
-      ))}
-      {nodes.map((n) => (
-        <g key={n.label}>
-          <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={10} fill={t.background} stroke={t.text} strokeOpacity={0.35} strokeWidth={1.2} />
-          <circle cx={n.x + 18} cy={n.y + n.h / 2} r={4} fill={t.text} fillOpacity={0.35} />
-          <Text x={n.x + 32} y={n.y + 25} lines={n.label} font={f.monoBold} size={14} fill={t.text} />
-          <Text x={n.x + 32} y={n.y + 43} lines={ellipsize(n.sub ?? '', f.mono, 12, n.w - 44)} font={f.mono} size={12} fill={t.text} opacity={0.55} />
-        </g>
-      ))}
-      <rect x={core.x + 6} y={core.y + 8} width={core.w} height={core.h} rx={14} fill={t.accent} fillOpacity={0.25} />
-      <rect x={core.x} y={core.y} width={core.w} height={core.h} rx={14} fill={t.primary} />
-      <circle cx={core.x + 26} cy={core.y + 32} r={6} fill={t.accent} />
-      <circle cx={core.x + 26} cy={core.y + 32} r={12} fill={t.accent} fillOpacity={0.25} />
-      <Text x={core.x + 46} y={core.y + 40} lines={fitLine(core.label, f.display, 26, 14, core.w - 64).text} font={f.display} size={fitLine(core.label, f.display, 26, 14, core.w - 64).size} tracking={-0.02} fill={t.background} />
-      <Text x={core.x + 22} y={core.y + 74} lines={ellipsize(join(['service', core.sub], ' · '), f.mono, 13, core.w - 40)} font={f.mono} size={13} fill={t.background} opacity={0.7} />
-      <Arrow x={core.x + core.w - 26} y={core.y + 70} size={14} stroke={t.accent} dir={-45} />
+      <path d={bars(hash(c.name || 'system'), split + 20, W)} fill={t.text} opacity={0.85} />
+      <Guides xs={[split]} ys={[150, 480]} stroke={t.text} opacity={0.2} cross={false} />
+      <path d={`M${split + 210} 150 m-12 0 h24 m-12 -12 v24`} stroke={t.text} strokeWidth={1.4} />
+      {o.showBrand ? <Mark x={M} y={70} size={46} assets={assets} name={c.name} uid={uid} fill={t.text} color={t.background} font={f.display} shape="square" /> : null}
+      <Text x={M - 3} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.04} fill={t.text} />
     </Frame>
   )
 }
@@ -80,16 +50,13 @@ export const system: TemplateDef = {
   number: 10,
   name: 'System',
   collection: 'developer',
-  description: 'Architecture-diagram language: dot grid, connected service nodes, arrows and technical labels.',
+  description: 'An SDK release card: a bold headline bottom-left and a generated field of signal bars on graphite.',
   fonts: {
-    display: { family: 'Hanken Grotesk', weight: 700 },
-    body: { family: 'Hanken Grotesk', weight: 400 },
-    mono: { family: 'Geist Mono', weight: 400 },
-    monoBold: { family: 'Geist Mono', weight: 500 },
+    display: { family: 'Geist', weight: 600 },
   },
-  theme: { primary: '#16171a', accent: '#ff5a36', background: '#f3f2ee', text: '#16171a' },
-  limits: { headline: 56, description: 110 },
-  uses: ['badge', 'category'],
+  theme: { primary: '#ededed', accent: '#ededed', background: '#111111', text: '#ededed' },
+  limits: { headline: 40 },
+  uses: ['logo'],
   render: System,
 }
 

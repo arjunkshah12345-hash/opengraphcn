@@ -1,4 +1,4 @@
-import { BlockText, blockTop, caps, join } from '../core/kit'
+import { BlockText, blockTop, Brand } from '../core/kit'
 import { Frame, Grain, Text } from '../core/primitives'
 import { measure, vmetrics } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
@@ -7,7 +7,7 @@ import { OgImage, type OgImageProps } from '../core/render'
 const W = 1200
 /* ─────────────────────────── 04 · Type Study ─────────────────────────── */
 
-function TypeStudy({ content: c, theme: t, options: o, fonts: f, uid }: TemplateProps) {
+function TypeStudy({ content: c, theme: t, options: o, fonts: f, uid, assets }: TemplateProps) {
   const M = 72
   const s = o.scale
   const split = 640
@@ -22,30 +22,19 @@ function TypeStudy({ content: c, theme: t, options: o, fonts: f, uid }: Template
     ['x-height', base - vm.cap * 0.68],
     ['baseline', base],
   ]
-  const head = blockTop(c.headline, { font: f.display, maxWidth: split - M - 40, maxLines: 4, max: 74 * s, min: 34, lineHeight: 1.02, tracking: -0.02, top: 196, maxHeight: 250 })
+  const head = blockTop(c.headline, { font: f.display, maxWidth: split - M - 40, maxLines: 4, max: 84 * s, min: 34, lineHeight: 1.0, tracking: -0.02, top: 200, maxHeight: 250 })
   const desc = blockTop(c.description, { font: f.body, maxWidth: split - M - 60, maxLines: 2, max: 19, min: 15, lineHeight: 1.45, top: head.bottom + 26 })
   return (
     <Frame background={t.background}>
       <Grain uid={uid} opacity={0.08} blend="screen" />
       <rect x={split} y={0} width={W - split} height={630} fill={t.text} opacity={0.035} />
       {guides.map(([k, y]) => (
-        <g key={k}>
-          <line x1={split} x2={W} y1={y} y2={y} stroke={t.accent} strokeOpacity={0.55} strokeDasharray="2 5" />
-          <Text x={split + 24} y={y - 8} lines={k} font={f.mono} size={12} fill={t.accent} opacity={0.85} />
-        </g>
+        <line key={k} x1={split} x2={W} y1={y} y2={y} stroke={t.accent} strokeOpacity={0.5} strokeDasharray="2 5" />
       ))}
       <Text x={gx} y={base} lines={glyph} font={f.specimen} size={gs} tracking={-0.04} fill={t.text} />
-      <Text x={M} y={110} lines={caps(join(['Specimen', o.showBrand ? c.name : ''], '  /  '))} font={f.mono} size={14} tracking={0.1} fill={t.accent} />
+      {o.showBrand ? <Brand x={M} y={70} size={36} assets={assets} name={c.name} uid={uid} font={f.body} fill={t.text} bg={t.background} shape="circle" /> : null}
       <Text x={M - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.02} fill={t.text} />
       {desc.bottom < 520 ? <BlockText b={desc} x={M} font={f.body} fill={t.text} opacity={0.6} /> : null}
-      <line x1={M} x2={split - 40} y1={548} y2={548} stroke={t.text} strokeOpacity={0.18} />
-      {o.showMeta ? (
-        <g>
-          <Text x={M} y={584} lines={`${f.specimen.family} ${f.specimen.weight}`} font={f.mono} size={14} fill={t.text} opacity={0.7} />
-          <Text x={split - 40} y={584} anchor="end" lines={c.domain} font={f.mono} size={14} fill={t.text} opacity={0.45} />
-          <Text x={split + 28} y={584} lines="A B C D E F G H I J K L M — 0 1 2 3 4 5 6 7 8 9" font={f.mono} size={13} tracking={0.04} fill={t.text} opacity={0.4} />
-        </g>
-      ) : null}
     </Frame>
   )
 }

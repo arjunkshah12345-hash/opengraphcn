@@ -13,7 +13,7 @@ function Poster({ content: c, theme: t, options: o, fonts: f, uid }: TemplatePro
   const s = o.scale
   const r = fit(caps(c.headline), { font: f.display, maxWidth: 820, maxLines: 4, max: 190 * s, min: 56, lineHeight: 0.86, tracking: -0.005, maxHeight: 520 })
   const y0 = M + r.size * 0.74
-  const info = [o.showBrand ? c.name : '', c.category, c.date, c.badge].filter(Boolean)
+  const info = [o.showBrand ? c.name : '', c.date].filter(Boolean)
   return (
     <Frame background={t.background}>
       <circle cx={930} cy={270} r={250} fill={t.accent} />

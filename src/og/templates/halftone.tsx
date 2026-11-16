@@ -1,4 +1,4 @@
-import { BlockText, blockTop, caps, join } from '../core/kit'
+import { BlockText, blockTop, caps } from '../core/kit'
 import { Frame, Grain, Text } from '../core/primitives'
 import type { TemplateDef, TemplateProps } from '../core/types'
 import { r2 } from '../core/utils'
@@ -45,16 +45,11 @@ function Halftone({ content: c, theme: t, options: o, fonts: f, uid }: TemplateP
       <line x1={M} x2={W - M} y1={102} y2={102} stroke={t.text} strokeWidth={1.5} />
       <line x1={M} x2={W - M} y1={H - 82} y2={H - 82} stroke={t.text} strokeWidth={1.5} />
       {o.showBrand ? <Text x={M} y={80} lines={caps(c.name)} font={f.mono} size={14} tracking={0.16} fill={t.text} /> : null}
-      <Text x={W - M} y={80} anchor="end" lines={caps(join(['Print', c.category], ' / '))} font={f.mono} size={14} tracking={0.16} fill={t.text} />
       <Text x={M - 3} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.035} fill={t.text} />
       <BlockText b={desc} x={M} font={f.italic} fill={t.text} opacity={0.8} />
       {o.showMeta ? (
         <g>
           <Text x={M} y={H - 50} lines={caps(c.domain)} font={f.mono} size={13} tracking={0.16} fill={t.text} />
-          <Text x={W - M} y={H - 50} anchor="end" lines={caps(c.date)} font={f.mono} size={13} tracking={0.16} fill={t.text} />
-          {[t.accent, t.primary, t.text].map((col, i) => (
-            <circle key={i} cx={W / 2 - 22 + i * 22} cy={H - 55} r={6} fill={col} />
-          ))}
         </g>
       ) : null}
     </Frame>

@@ -1,37 +1,43 @@
-import { BlockText, blockTop, caps, join, Mark } from '../core/kit'
-import { Frame, Grain, Text } from '../core/primitives'
+import { Img, Frame, Text } from '../core/primitives'
+import { balance, fit, vmetrics } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
+import { initials } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
 
 const W = 1200
 /* ─────────────────────────── 02 · The Journal ─────────────────────────── */
 
-function Journal({ content: c, theme: t, assets, options: o, fonts: f, uid }: TemplateProps) {
-  const M = 80
-  const s = o.scale
-  const split = 776
-  const head = blockTop(c.headline, { font: f.display, maxWidth: split - M - 56, maxLines: 4, max: 92 * s, min: 40, lineHeight: 1.0, tracking: -0.028, top: 168, maxHeight: 330 })
-  const dek = blockTop(c.description, { font: f.italic, maxWidth: W - M - split - 40, maxLines: 6, max: 27, min: 18, lineHeight: 1.32, top: 176, maxHeight: 220 })
-  const who = c.author || c.name
+function Journal({ content: c, theme: t, options: o, fonts: f, assets, uid }: TemplateProps) {
+  const r = fit(c.headline, { font: f.display, maxWidth: 1000, maxLines: 2, max: 92 * o.scale, min: 40, lineHeight: 1.0, tracking: -0.02 })
+  const lines = r.truncated ? r.lines : balance(c.headline, f.display, r.size, 1000, -0.02)
+  const y0 = 430 - (lines.length - 1) * r.size * 0.5
+  const letter = initials(c.name).slice(0, 1) || 'A'
+  const gs = 250
+  const gy = 300 - (lines.length - 1) * r.size * 0.5
+  const logo = assets.logo || assets.favicon
   return (
     <Frame background={t.background}>
-      <Grain uid={uid} opacity={0.05} />
-      <rect x={0} y={0} width={W} height={8} fill={t.accent} />
-      <Text x={M} y={104} lines={caps(join(['Essay', c.category], '  —  '))} font={f.label} size={14} tracking={0.18} fill={t.accent} />
-      {o.showMeta && c.badge ? <Text x={W - M} y={104} anchor="end" lines={caps(c.badge)} font={f.label} size={14} tracking={0.18} fill={t.text} opacity={0.5} /> : null}
-      <Text x={M - 3} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.028} fill={t.text} />
-      <line x1={split} x2={split} y1={150} y2={500} stroke={t.text} strokeOpacity={0.14} />
-      <BlockText b={dek} x={split + 40} font={f.italic} fill={t.text} opacity={0.78} />
-      {o.showMeta ? (
-        <g>
-          <Mark x={split + 40} y={436} size={52} assets={{ logo: assets.avatar }} name={who} uid={`${uid}-a`} fill={t.text} color={t.background} font={f.display} shape="circle" />
-          <Text x={split + 108} y={458} lines={who} font={f.label} size={18} fill={t.text} />
-          <Text x={split + 108} y={484} lines={c.date} font={f.italic} size={18} fill={t.text} opacity={0.6} />
-        </g>
+      <defs>
+        <linearGradient id={`${uid}-g`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor={t.accent} />
+          <stop offset="0.55" stopColor={t.primary} />
+          <stop offset="1" stopColor="#2f54ff" />
+        </linearGradient>
+        <filter id={`${uid}-sh`} x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation={18} />
+        </filter>
+      </defs>
+      {o.showBrand ? (
+        logo ? (
+          <Img href={logo} x={W / 2 - 90} y={gy - 200} w={180} h={180} r={40} uid={uid} fit="contain" />
+        ) : (
+          <g>
+            <Text x={W / 2} y={gy + 6} anchor="middle" lines={letter} font={f.glyph} size={gs} fill={t.primary} opacity={0.45} filter={`url(#${uid}-sh)`} />
+            <Text x={W / 2} y={gy} anchor="middle" lines={letter} font={f.glyph} size={gs} fill={`url(#${uid}-g)`} stroke="#ffffff" strokeWidth={13} strokeLinejoin="round" style={{ paintOrder: 'stroke' }} />
+          </g>
+        )
       ) : null}
-      <line x1={M} x2={W - M} y1={552} y2={552} stroke={t.text} strokeOpacity={0.9} strokeWidth={1.5} />
-      {o.showBrand ? <Text x={M} y={592} lines={c.name} font={f.display} size={26} tracking={-0.02} fill={t.text} /> : null}
-      {o.showMeta ? <Text x={W - M} y={590} anchor="end" lines={caps(c.domain)} font={f.label} size={13} tracking={0.18} fill={t.text} opacity={0.6} /> : null}
+      <Text x={W / 2} y={y0 + vmetrics(f.display, r.size).cap * 0.5} anchor="middle" lines={lines} font={f.display} size={r.size} lh={1.0} tracking={-0.02} fill={t.text} />
     </Frame>
   )
 }
@@ -41,15 +47,14 @@ export const journal: TemplateDef = {
   number: 2,
   name: 'The Journal',
   collection: 'editorial',
-  description: 'A long-read layout: a bold serif headline beside an italic standfirst and a byline, under a red rule.',
+  description: 'A letter to your readers: a glossy outlined monogram above a centred serif headline on black.',
   fonts: {
-    display: { family: 'Newsreader', weight: 600 },
-    italic: { family: 'Newsreader', weight: 400, style: 'italic' },
-    label: { family: 'Inter Tight', weight: 600 },
+    display: { family: 'Newsreader', weight: 400 },
+    glyph: { family: 'Inter Tight', weight: 800 },
   },
-  theme: { primary: '#141414', accent: '#c4271c', background: '#faf8f3', text: '#141414' },
-  limits: { headline: 70, description: 140 },
-  uses: ['date', 'category', 'badge', 'author', 'avatar'],
+  theme: { primary: '#ff3d6e', accent: '#ff9a3d', background: '#000000', text: '#f5f3ee' },
+  limits: { headline: 50 },
+  uses: ['logo'],
   render: Journal,
 }
 

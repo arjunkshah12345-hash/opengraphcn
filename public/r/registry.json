@@ -88,7 +88,7 @@
       "name": "monograph",
       "type": "registry:component",
       "title": "Monograph (opengraphcn)",
-      "description": "A towering serif headline on warm paper, a single accent dot and quiet italic notes.",
+      "description": "Quiet and confident: your logo and a large serif headline on near-black, nothing else.",
       "categories": [
         "og-image",
         "editorial"
@@ -108,7 +108,7 @@
       "name": "journal",
       "type": "registry:component",
       "title": "The Journal (opengraphcn)",
-      "description": "A long-read layout: a bold serif headline beside an italic standfirst and a byline, under a red rule.",
+      "description": "A letter to your readers: a glossy outlined monogram above a centred serif headline on black.",
       "categories": [
         "og-image",
         "editorial"
@@ -128,7 +128,7 @@
       "name": "modernist",
       "type": "registry:component",
       "title": "Modernist (opengraphcn)",
-      "description": "International Typographic Style: a huge grotesk headline on signal red, six-column grid and a ruled data row.",
+      "description": "Black grotesk on white, set loose over one enormous yellow disc.",
       "categories": [
         "og-image",
         "editorial"
@@ -168,7 +168,7 @@
       "name": "cover",
       "type": "registry:component",
       "title": "Cover (opengraphcn)",
-      "description": "A clothbound book cover: centred Bodoni on deep navy inside a double gold rule, with an ornament.",
+      "description": "An event poster: a silk ribbon of hairlines on white beside a deep violet panel with the headline and date.",
       "categories": [
         "og-image",
         "editorial"
@@ -188,7 +188,7 @@
       "name": "terminal",
       "type": "registry:component",
       "title": "Terminal (opengraphcn)",
-      "description": "A calm terminal window: real prompt, install command, block cursor and a vim-style status line.",
+      "description": "For developer tools: a centred serif headline above a softly lit terminal that bleeds off the bottom.",
       "categories": [
         "og-image",
         "developer"
@@ -208,7 +208,7 @@
       "name": "codebase",
       "type": "registry:component",
       "title": "Codebase (opengraphcn)",
-      "description": "A clean grotesk headline beside an editor window with your project as a typed config file.",
+      "description": "Docs-site calm: a crisp headline and a readable paragraph inside hairline guides on black.",
       "categories": [
         "og-image",
         "developer"
@@ -228,7 +228,7 @@
       "name": "git-commit",
       "type": "registry:component",
       "title": "Git Commit (opengraphcn)",
-      "description": "A commit log entry with branch graph, ref labels, author line and your headline as the message.",
+      "description": "Infrastructure energy: bold capitals beside isometric service cards wired together on deep indigo.",
       "categories": [
         "og-image",
         "developer"
@@ -248,7 +248,7 @@
       "name": "blueprint",
       "type": "registry:component",
       "title": "Blueprint (opengraphcn)",
-      "description": "Drafting sheet with grid, zone markers, a dimensioned headline, schematic and a title block.",
+      "description": "Release notes on a drafting grid: your version extruded in wireframe, with a spec table of real details.",
       "categories": [
         "og-image",
         "developer"
@@ -268,7 +268,7 @@
       "name": "system",
       "type": "registry:component",
       "title": "System (opengraphcn)",
-      "description": "Architecture-diagram language: dot grid, connected service nodes, arrows and technical labels.",
+      "description": "An SDK release card: a bold headline bottom-left and a generated field of signal bars on graphite.",
       "categories": [
         "og-image",
         "developer"
@@ -288,7 +288,7 @@
       "name": "atmosphere",
       "type": "registry:component",
       "title": "Atmosphere (opengraphcn)",
-      "description": "A deep, grainy mesh gradient at dusk with a light serif headline anchored bottom-left.",
+      "description": "A glossy 3D ring floating in deep blue light above a clean headline that fades into the accent.",
       "categories": [
         "og-image",
         "abstract"
@@ -308,7 +308,7 @@
       "name": "liquid",
       "type": "registry:component",
       "title": "Liquid (opengraphcn)",
-      "description": "Hairline contour lines flow like a topographic map beneath a crisp headline on deep teal.",
+      "description": "A twisting silk ribbon of a hundred hairlines in violet and coral, glowing on deep purple.",
       "categories": [
         "og-image",
         "abstract"
@@ -328,7 +328,7 @@
       "name": "chromatic",
       "type": "registry:component",
       "title": "Chromatic (opengraphcn)",
-      "description": "A soft iridescent pastel field with a bold rounded headline in near-black.",
+      "description": "Bright and friendly: an iridescent glow rising from the bottom edge of a white card with hairline guides.",
       "categories": [
         "og-image",
         "abstract"
@@ -348,7 +348,7 @@
       "name": "nocturne",
       "type": "registry:component",
       "title": "Nocturne (opengraphcn)",
-      "description": "Near-black night with a luminous eclipse, faint stars and a refined Garamond headline.",
+      "description": "A black prism lit from behind, glowing on black, with a short centred line beneath.",
       "categories": [
         "og-image",
         "abstract"
@@ -368,7 +368,7 @@
       "name": "spectrum",
       "type": "registry:component",
       "title": "Spectrum (opengraphcn)",
-      "description": "Refracted light: softly blurred spectral columns behind a towering condensed headline.",
+      "description": "Glossy light beams cut across a dark ground behind a centred logo and headline.",
       "categories": [
         "og-image",
         "abstract"
@@ -388,7 +388,7 @@
       "name": "nothing",
       "type": "registry:component",
       "title": "Nothing (opengraphcn)",
-      "description": "Black glass and a dot grid: one stark grotesk headline, one red dot, nothing else.",
+      "description": "A changelog lockup: your mark, a hairline divider and one big line, centred on black.",
       "categories": [
         "og-image",
         "minimal"
@@ -408,7 +408,7 @@
       "name": "index",
       "type": "registry:component",
       "title": "Index (opengraphcn)",
-      "description": "A catalogue entry: numbered rows, fine rules, monospaced labels and a clear typographic hierarchy.",
+      "description": "All brand: a big centred logo and wordmark on warm black, with one quiet line beneath.",
       "categories": [
         "og-image",
         "minimal"
@@ -428,7 +428,7 @@
       "name": "canvas",
       "type": "registry:component",
       "title": "Canvas (opengraphcn)",
-      "description": "A gallery wall: a framed work (your image or a colour-field painting) beside a museum label.",
+      "description": "Two-tone and centred: the first half of your headline in white, the second in your accent.",
       "categories": [
         "og-image",
         "minimal"
@@ -448,7 +448,7 @@
       "name": "mono",
       "type": "registry:component",
       "title": "Mono (opengraphcn)",
-      "description": "One colour, every tone: a saturated field with a tinted headline and a ghosted outline of your name.",
+      "description": "Clean light card: logo on top, a tight centred headline and a soft grey line inside faint guides.",
       "categories": [
         "og-image",
         "minimal"
@@ -468,7 +468,7 @@
       "name": "frame",
       "type": "registry:component",
       "title": "Frame (opengraphcn)",
-      "description": "A gallery mat: centred serif on warm paper inside a thick coloured border and a hairline inset.",
+      "description": "A bold colour card with rounded corners on a paper mat: logo, an arrow and a big white headline.",
       "categories": [
         "og-image",
         "minimal"
@@ -588,7 +588,7 @@
       "name": "launch",
       "type": "registry:component",
       "title": "Launch (opengraphcn)",
-      "description": "Launch-day card: spotlight, perspective floor, release pill, brand lock-up and a centred headline.",
+      "description": "A launcher-style card: logo and headline over red light beams, with a command palette rising from the bottom.",
       "categories": [
         "og-image",
         "product"
@@ -608,7 +608,7 @@
       "name": "showcase",
       "type": "registry:component",
       "title": "Showcase (opengraphcn)",
-      "description": "Your product in a browser window bleeding off the edge — your screenshot, or a dithered hero — on a soft glow.",
+      "description": "A SaaS homepage card: headline and pitch on the left, your site in a browser window bleeding off the right.",
       "categories": [
         "og-image",
         "product"

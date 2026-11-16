@@ -1,29 +1,30 @@
-import { caps, join } from '../core/kit'
+import { blockBottom, Brand, Arrow } from '../core/kit'
 import { Frame, Grain, Text } from '../core/primitives'
-import { balance, fit, vmetrics } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
+import { mix } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
 
 const W = 1200
 const H = 630
 /* ─────────────────────────── 20 · Frame ─────────────────────────── */
 
-function FrameTpl({ content: c, theme: t, options: o, fonts: f, uid }: TemplateProps) {
-  const s = o.scale
-  const B = 34
-  const r = fit(c.headline, { font: f.display, maxWidth: 860, maxLines: 3, max: 104 * s, min: 40, lineHeight: 1.0, tracking: -0.02, maxHeight: 300 })
-  const lines = r.truncated ? r.lines : balance(c.headline, f.display, r.size, 860, -0.02)
-  const cap = vmetrics(f.display, r.size).cap
-  const h = cap + (lines.length - 1) * r.size
-  const y0 = 316 - h / 2 + cap
+function FrameTpl({ content: c, theme: t, options: o, fonts: f, uid, assets }: TemplateProps) {
+  const P = 28
+  const x = P + 56
+  const head = blockBottom(c.headline, { font: f.display, maxWidth: 880, maxLines: 3, max: 92 * o.scale, min: 38, lineHeight: 1.0, tracking: -0.045, bottom: H - P - 64, maxHeight: 340 })
   return (
-    <Frame background={t.accent}>
-      <rect x={B} y={B} width={W - B * 2} height={H - B * 2} fill={t.background} />
-      <Grain uid={uid} opacity={0.06} />
-      <rect x={B + 16} y={B + 16} width={W - B * 2 - 32} height={H - B * 2 - 32} fill="none" stroke={t.text} strokeOpacity={0.14} />
-      {o.showBrand ? <Text x={W / 2} y={118} anchor="middle" lines={caps(c.name)} font={f.label} size={14} tracking={0.36} fill={t.text} opacity={0.8} /> : null}
-      <Text x={W / 2} y={y0} anchor="middle" lines={lines} font={f.display} size={r.size} lh={1.0} tracking={-0.02} fill={t.text} />
-      {o.showMeta ? <Text x={W / 2} y={530} anchor="middle" lines={join([c.domain, c.date], '   ·   ')} font={f.italic} size={22} fill={t.text} opacity={0.6} /> : null}
+    <Frame background={t.background}>
+      <defs>
+        <linearGradient id={`${uid}-card`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor={mix(t.accent, '#ffffff', 0.12)} />
+          <stop offset="1" stopColor={mix(t.accent, '#000000', 0.12)} />
+        </linearGradient>
+      </defs>
+      <rect x={P} y={P} width={W - P * 2} height={H - P * 2} rx={28} fill={`url(#${uid}-card)`} />
+      <Grain uid={uid} opacity={0.08} blend="overlay" />
+      {o.showBrand ? <Brand x={x} y={P + 52} size={40} assets={assets} name={c.name} uid={uid} font={f.label} fill={t.text} bg={t.accent} /> : null}
+      <Arrow x={W - P - 84} y={P + 72} size={40} stroke={t.text} dir={-45} width={3} />
+      <Text x={x - 4} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.045} fill={t.text} />
     </Frame>
   )
 }
@@ -33,15 +34,14 @@ export const frame: TemplateDef = {
   number: 20,
   name: 'Frame',
   collection: 'minimal',
-  description: 'A gallery mat: centred serif on warm paper inside a thick coloured border and a hairline inset.',
+  description: 'A bold colour card with rounded corners on a paper mat: logo, an arrow and a big white headline.',
   fonts: {
-    display: { family: 'Instrument Serif', weight: 400 },
-    italic: { family: 'Instrument Serif', weight: 400, style: 'italic' },
-    label: { family: 'Inter Tight', weight: 600 },
+    display: { family: 'Geist', weight: 600 },
+    label: { family: 'Geist', weight: 600 },
   },
-  theme: { primary: '#231f1a', accent: '#1f3d2b', background: '#f4efe6', text: '#231f1a' },
-  limits: { headline: 60 },
-  uses: ['date'],
+  theme: { primary: '#ffffff', accent: '#ff4f1f', background: '#ece9e2', text: '#ffffff' },
+  limits: { headline: 50 },
+  uses: ['logo'],
   render: FrameTpl,
 }
 

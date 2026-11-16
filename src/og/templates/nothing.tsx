@@ -1,30 +1,30 @@
-import { AccentTail, BlockText, blockBottom, blockTop, caps, dotGridPath, join } from '../core/kit'
+import { Mark } from '../core/kit'
 import { Frame, Text } from '../core/primitives'
+import { fitLine, measure, vmetrics } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
 import { OgImage, type OgImageProps } from '../core/render'
 
 const W = 1200
-const H = 630
 /* ─────────────────────────── 16 · Nothing ─────────────────────────── */
 
-function Nothing({ content: c, theme: t, options: o, fonts: f }: TemplateProps) {
-  const M = 72
-  const s = o.scale
-  const desc = c.description ? blockBottom(c.description, { font: f.mono, maxWidth: 520, maxLines: 2, max: 17, min: 14, lineHeight: 1.5, bottom: 562 }) : null
-  const head = blockTop(c.headline, { font: f.display, maxWidth: 980, maxLines: 3, max: 112 * s, min: 44, lineHeight: 0.98, tracking: -0.05, top: 168, maxHeight: (desc ? desc.y - desc.size : 560) - 210 })
+function Nothing({ content: c, theme: t, options: o, fonts: f, uid, assets }: TemplateProps) {
+  const word = fitLine(c.headline, f.display, 96 * o.scale, 36, 860, -0.035)
+  const ms = Math.round(word.size * 0.9)
+  const gap = word.size * 0.42
+  const ww = measure(word.text, f.display, word.size, -0.035)
+  const total = (o.showBrand ? ms + gap * 2 + 2 : 0) + ww
+  const x0 = W / 2 - total / 2
+  const cy = 315
+  const cap = vmetrics(f.display, word.size).cap
   return (
     <Frame background={t.background}>
-      <path d={dotGridPath({ x: 24, y: 24, w: W - 48, h: H - 48, gap: 16, size: 1.5 })} fill={t.text} opacity={0.09} />
       {o.showBrand ? (
         <g>
-          <circle cx={M + 7} cy={78} r={7} fill={t.accent} />
-          <Text x={M + 26} y={84} lines={caps(c.name)} font={f.mono} size={16} tracking={0.12} fill={t.text} />
+          <Mark x={x0} y={cy - ms / 2} size={ms} assets={assets} name={c.name} uid={uid} fill={t.text} color={t.background} font={f.display} shape="circle" />
+          <line x1={x0 + ms + gap} x2={x0 + ms + gap} y1={cy - ms * 0.55} y2={cy + ms * 0.55} stroke={t.text} strokeOpacity={0.3} strokeWidth={2} />
         </g>
       ) : null}
-      {o.showMeta ? <Text x={W - M} y={84} anchor="end" lines={caps(c.date)} font={f.mono} size={14} tracking={0.12} fill={t.text} opacity={0.5} /> : null}
-      <AccentTail x={M - 5} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.05} fill={t.text} tail={t.accent} />
-      {desc ? <BlockText b={desc} x={M} font={f.mono} fill={t.text} opacity={0.55} /> : null}
-      {o.showMeta ? <Text x={W - M} y={562} anchor="end" lines={caps(join([c.domain]))} font={f.mono} size={14} tracking={0.12} fill={t.text} opacity={0.5} /> : null}
+      <Text x={x0 + (o.showBrand ? ms + gap * 2 + 2 : 0)} y={cy + cap / 2} lines={word.text} font={f.display} size={word.size} tracking={-0.035} fill={t.text} />
     </Frame>
   )
 }
@@ -34,14 +34,13 @@ export const nothing: TemplateDef = {
   number: 16,
   name: 'Nothing',
   collection: 'minimal',
-  description: 'Black glass and a dot grid: one stark grotesk headline, one red dot, nothing else.',
+  description: 'A changelog lockup: your mark, a hairline divider and one big line, centred on black.',
   fonts: {
-    display: { family: 'Geist', weight: 500 },
-    mono: { family: 'Geist Mono', weight: 400 },
+    display: { family: 'Inter Tight', weight: 500 },
   },
-  theme: { primary: '#f5f5f5', accent: '#ff2a1a', background: '#0a0a0a', text: '#f5f5f5' },
-  limits: { headline: 60, description: 100 },
-  uses: ['date'],
+  theme: { primary: '#f7f8f8', accent: '#f7f8f8', background: '#08090a', text: '#f7f8f8' },
+  limits: { headline: 24 },
+  uses: ['logo'],
   render: Nothing,
 }
 

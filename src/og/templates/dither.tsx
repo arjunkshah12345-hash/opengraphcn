@@ -1,4 +1,4 @@
-import { BlockText, blockTop, caps, join } from '../core/kit'
+import { BlockText, blockTop, Brand } from '../core/kit'
 import { Frame, Text } from '../core/primitives'
 import type { TemplateDef, TemplateProps } from '../core/types'
 import { OgImage, type OgImageProps } from '../core/render'
@@ -61,7 +61,7 @@ export function ditherSpherePath(cx: number, cy: number, R: number, cell: number
   return d
 }
 
-function Dither({ content: c, theme: t, options: o, fonts: f }: TemplateProps) {
+function Dither({ content: c, theme: t, options: o, fonts: f, assets, uid }: TemplateProps) {
   const s = o.scale
   const head = blockTop(c.headline, { font: f.display, maxWidth: 560, maxLines: 4, max: 66 * s, min: 32, lineHeight: 1.02, tracking: -0.035, top: 156, maxHeight: 270 })
   const desc = blockTop(c.description, { font: f.mono, maxWidth: 480, maxLines: 3, max: 16, min: 13, lineHeight: 1.55, top: head.bottom + 28 })
@@ -69,11 +69,9 @@ function Dither({ content: c, theme: t, options: o, fonts: f }: TemplateProps) {
   return (
     <Frame background={t.background}>
       <path d={d} fill={t.accent} shapeRendering="crispEdges" />
-      {o.showBrand ? <Text x={72} y={86} lines={caps(c.name)} font={f.monoMed} size={14} tracking={0.18} fill={t.text} /> : null}
-      <Text x={72} y={112} lines="BAYER 8×8 · 1-BIT" font={f.mono} size={12} tracking={0.18} fill={t.text} opacity={0.45} />
+      {o.showBrand ? <Brand x={72} y={66} size={36} assets={assets} name={c.name} uid={uid} font={f.display} fill={t.text} bg={t.background} /> : null}
       <Text x={70} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.035} fill={t.text} />
       <BlockText b={desc} x={72} font={f.mono} fill={t.text} opacity={0.65} />
-      {o.showMeta ? <Text x={72} y={H - 60} lines={caps(join([c.domain, c.badge], '  ·  '))} font={f.monoMed} size={13} tracking={0.16} fill={t.text} opacity={0.8} /> : null}
     </Frame>
   )
 }
