@@ -1,6 +1,6 @@
-import { BlockText, blockTop, caps, join, Mark } from '../core/kit'
-import { Frame, Grain, Text } from '../core/primitives'
-import { fitLine, measure, vmetrics } from '../core/text'
+import { BlockText, blockTop, ditherPath, Mark } from '../core/kit'
+import { Frame, Text } from '../core/primitives'
+import { fitLine } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
 import { OgImage, type OgImageProps } from '../core/render'
 
@@ -11,44 +11,28 @@ const H = 630
 function Announcement({ content: c, theme: t, options: o, fonts: f, assets, uid }: TemplateProps) {
   const M = 72
   const s = o.scale
-  const head = blockTop(c.headline, { font: f.display, maxWidth: 740, maxLines: 3, max: 100 * s, min: 44, lineHeight: 0.98, tracking: -0.02, top: 176, maxHeight: 280 })
-  const desc = blockTop(c.description, { font: f.body, maxWidth: 640, maxLines: 2, max: 21, min: 16, lineHeight: 1.4, top: head.bottom + 26 })
-  const cx = 990
-  const cy = 330
-  const ticks = Array.from({ length: 48 }, (_, i) => (i / 48) * Math.PI * 2)
-  const badge = fitLine(c.badge || 'New', f.brand, 44, 18, 170, -0.03)
-  const label = 'UPDATE'
-  const lw = measure(label, f.mono, 12, 0.18) + 28
+  const big = fitLine(c.badge || 'New', f.brand, 300, 72, 500, -0.06)
+  const head = blockTop(c.headline, { font: f.display, maxWidth: 470, maxLines: 4, max: 60 * s, min: 26, lineHeight: 1.04, tracking: -0.035, top: 200, maxHeight: 230 })
+  const desc = blockTop(c.description, { font: f.body, maxWidth: 440, maxLines: 3, max: 19, min: 15, lineHeight: 1.45, top: head.bottom + 22 })
+  const field = ditherPath({ x: 600, y: 0, w: 600, h: H, cell: 10, f: (u, v) => Math.max(0, 1 - Math.hypot((u - 0.55) * 1.2, (v - 0.92) * 1.1) * 1.25) })
   return (
     <Frame background={t.background}>
-      <Grain uid={uid} opacity={0.1} blend="overlay" />
+      <defs>
+        <linearGradient id={`${uid}-heat`} x1="0" y1="1" x2="0.4" y2="0">
+          <stop offset="0" stopColor={t.accent} />
+          <stop offset="1" stopColor={t.primary} />
+        </linearGradient>
+      </defs>
+      <path d={field} fill={`url(#${uid}-heat)`} opacity={0.9} />
+      <Text x={W - M + 8} y={330 + big.size * 0.3} anchor="end" lines={big.text} font={f.brand} size={big.size} tracking={-0.06} fill={t.text} />
       {o.showBrand ? (
         <g>
-          <Mark x={M} y={62} size={34} assets={assets} name={c.name} uid={uid} fill={t.accent} color={t.background} font={f.brand} shape="circle" />
-          <Text x={M + 48} y={86} lines={c.name} font={f.brand} size={19} tracking={-0.01} fill={t.text} />
+          <Mark x={M} y={66} size={34} assets={assets} name={c.name} uid={uid} fill={t.text} color={t.background} font={f.brand} shape="rounded" />
+          <Text x={M + 48} y={90} lines={c.name} font={f.brand} size={20} tracking={-0.01} fill={t.text} />
         </g>
       ) : null}
-      <rect x={W - M - lw} y={64} width={lw} height={30} rx={15} fill="none" stroke={t.accent} />
-      <Text x={W - M - lw / 2} y={84} anchor="middle" lines={label} font={f.mono} size={12} tracking={0.18} fill={t.accent} />
-      <Text x={M - 4} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.02} fill={t.text} />
-      <BlockText b={desc} x={M} font={f.body} fill={t.text} opacity={0.72} />
-      <g>
-        {ticks.map((a, i) => (
-          <line key={i} x1={cx + Math.cos(a) * 132} y1={cy + Math.sin(a) * 132} x2={cx + Math.cos(a) * (i % 4 ? 140 : 148)} y2={cy + Math.sin(a) * (i % 4 ? 140 : 148)} stroke={t.accent} strokeWidth={1.5} strokeOpacity={i % 4 ? 0.5 : 1} />
-        ))}
-        <circle cx={cx} cy={cy} r={118} fill={t.accent} />
-        <circle cx={cx} cy={cy} r={106} fill="none" stroke={t.background} strokeOpacity={0.35} strokeDasharray="2 5" />
-        <Text x={cx} y={cy - 36} anchor="middle" lines="RELEASED" font={f.mono} size={11} tracking={0.24} fill={t.background} />
-        <Text x={cx} y={cy + vmetrics(f.brand, badge.size).cap / 2} anchor="middle" lines={badge.text} font={f.brand} size={badge.size} tracking={-0.03} fill={t.background} />
-        <Text x={cx} y={cy + 52} anchor="middle" lines={fitLine(caps(c.date), f.mono, 12, 9, 150, 0.1).text} font={f.mono} size={12} tracking={0.1} fill={t.background} />
-      </g>
-      <line x1={M} x2={W - M} y1={H - 92} y2={H - 92} stroke={t.text} strokeOpacity={0.2} />
-      {o.showMeta ? (
-        <g>
-          <Text x={M} y={H - 56} lines={c.domain} font={f.mono} size={14} fill={t.text} opacity={0.8} />
-          <Text x={W - M} y={H - 56} anchor="end" lines={join([c.category, c.author], '  ·  ')} font={f.mono} size={14} fill={t.text} opacity={0.6} />
-        </g>
-      ) : null}
+      <Text x={M - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.03} fill={t.text} />
+      {desc.bottom < 540 ? <BlockText b={desc} x={M} font={f.body} fill={t.text} opacity={0.6} /> : null}
     </Frame>
   )
 }
@@ -58,15 +42,15 @@ export const announcement: TemplateDef = {
   number: 28,
   name: 'Announcement',
   collection: 'product',
-  description: 'Product update with an italic serif headline and a ticked release seal carrying version and date.',
+  description: 'A release card: your version number set huge over a dithered heat glow, with the headline beside it.',
   fonts: {
-    display: { family: 'Instrument Serif', weight: 400, style: 'italic' },
-    brand: { family: 'Geist', weight: 600 },
+    display: { family: 'Geist', weight: 600 },
+    brand: { family: 'Geist', weight: 700 },
     body: { family: 'Geist', weight: 400 },
     mono: { family: 'Geist Mono', weight: 500 },
   },
-  theme: { primary: '#f3eedf', accent: '#f2c14e', background: '#1d3a2e', text: '#f3eedf' },
-  limits: { headline: 50, description: 100 },
+  theme: { primary: '#ff4d2e', accent: '#ffb547', background: '#0c0a09', text: '#fafaf9' },
+  limits: { headline: 60, description: 110 },
   uses: ['logo', 'badge', 'date', 'category', 'author'],
   render: Announcement,
 }

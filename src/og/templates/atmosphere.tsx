@@ -1,42 +1,26 @@
-import { BlockText, blockCenter, blockTop, caps, join } from '../core/kit'
-import { Frame, Grain, Text } from '../core/primitives'
+import { blockBottom, Blob, Brand, Torus } from '../core/kit'
+import { Frame, Text } from '../core/primitives'
 import type { TemplateDef, TemplateProps } from '../core/types'
-import { hueShift } from '../core/utils'
+import { mix } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
 
-const W = 1200
-const H = 630
 /* ─────────────────────────── 11 · Atmosphere ─────────────────────────── */
 
-function Atmosphere({ content: c, theme: t, options: o, fonts: f, uid }: TemplateProps) {
-  const s = o.scale
-  const c3 = hueShift(t.primary, 38)
-  const c4 = hueShift(t.accent, -50)
-  const head = blockCenter(c.headline, { font: f.display, maxWidth: 960, maxLines: 3, max: 92 * s, min: 40, lineHeight: 1.0, tracking: -0.025, center: 292, maxHeight: 300 })
-  const desc = blockTop(c.description, { font: f.body, maxWidth: 640, maxLines: 2, max: 22, min: 17, lineHeight: 1.4, top: head.bottom + 30 })
+function Atmosphere({ content: c, theme: t, options: o, fonts: f, uid, assets }: TemplateProps) {
+  const M = 72
+  const head = blockBottom(c.headline, { font: f.display, maxWidth: 700, maxLines: 3, max: 64 * o.scale, min: 32, lineHeight: 1.06, tracking: -0.035, bottom: 548, maxHeight: 260 })
   return (
     <Frame background={t.background}>
       <defs>
-        <filter id={`${uid}-blur`} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation={95} />
-        </filter>
-        <radialGradient id={`${uid}-veil`} cx="0.5" cy="0.5" r="0.55">
-          <stop offset="0" stopColor={t.background} stopOpacity={0.55} />
-          <stop offset="1" stopColor={t.background} stopOpacity={0} />
-        </radialGradient>
+        <linearGradient id={`${uid}-head`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor={t.text} />
+          <stop offset="1" stopColor={mix(t.text, t.primary, 0.55)} />
+        </linearGradient>
       </defs>
-      <g filter={`url(#${uid}-blur)`}>
-        <circle cx={230} cy={120} r={290} fill={t.primary} />
-        <circle cx={1000} cy={110} r={270} fill={t.accent} />
-        <circle cx={860} cy={600} r={300} fill={c3} />
-        <circle cx={170} cy={640} r={250} fill={c4} />
-      </g>
-      <rect width={W} height={H} fill={`url(#${uid}-veil)`} />
-      <Grain uid={uid} opacity={0.16} blend="overlay" freq={0.75} />
-      {o.showBrand ? <Text x={W / 2} y={84} anchor="middle" lines={caps(c.name)} font={f.label} size={14} tracking={0.3} fill={t.text} /> : null}
-      <Text x={W / 2} y={head.y} anchor="middle" lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.025} fill={t.text} />
-      <BlockText b={desc} x={W / 2} anchor="middle" font={f.body} fill={t.text} opacity={0.75} />
-      {o.showMeta ? <Text x={W / 2} y={H - 64} anchor="middle" lines={caps(join([c.domain, c.date], '   ·   '))} font={f.label} size={12} tracking={0.24} fill={t.text} opacity={0.7} /> : null}
+      <Blob uid={uid} id="g" cx={860} cy={150} rx={360} ry={260} fill={t.primary} blur={120} opacity={0.35} />
+      <Torus uid={uid} cx={880} cy={200} r={200} thick={64} tilt={0.62} rot={-28} colors={[mix(t.primary, '#000000', 0.55), t.primary, mix(t.accent, '#ffffff', 0.35)]} />
+      {o.showBrand ? <Brand x={M} y={64} size={38} assets={assets} name={c.name} uid={uid} font={f.label} fill={t.text} bg={t.background} shape="circle" /> : null}
+      <Text x={M - 3} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.035} fill={`url(#${uid}-head)`} />
     </Frame>
   )
 }
@@ -46,15 +30,14 @@ export const atmosphere: TemplateDef = {
   number: 11,
   name: 'Atmosphere',
   collection: 'abstract',
-  description: 'Soft, blurred colour fields with grain and a centred, softly weighted serif headline.',
+  description: 'A glossy 3D ring floating in deep blue light above a clean headline that fades into the accent.',
   fonts: {
-    display: { family: 'Fraunces', weight: 300 },
-    body: { family: 'Inter Tight', weight: 400 },
-    label: { family: 'Inter Tight', weight: 500 },
+    display: { family: 'Inter Tight', weight: 500 },
+    label: { family: 'Inter Tight', weight: 600 },
   },
-  theme: { primary: '#ff8f6b', accent: '#7fb0ff', background: '#f3eee8', text: '#1d1a17' },
-  limits: { headline: 64, description: 110 },
-  uses: ['date'],
+  theme: { primary: '#3b6cff', accent: '#5ea1ff', background: '#0b0d17', text: '#ffffff' },
+  limits: { headline: 50 },
+  uses: ['logo'],
   render: Atmosphere,
 }
 

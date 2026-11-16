@@ -1,63 +1,49 @@
-import { BlockText, blockTop, Spans } from '../core/kit'
+import { blockBottom, Brand, caps } from '../core/kit'
 import { Frame, Text } from '../core/primitives'
-import { measure } from '../core/text'
+import { ellipsize } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
-import { mix, shortSha } from '../core/utils'
+import { mix } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
 
-const W = 1200
-const H = 630
 /* ─────────────────────────── 08 · Git Commit ─────────────────────────── */
 
-function GitCommit({ content: c, theme: t, options: o, fonts: f }: TemplateProps) {
-  const x = 262
-  const dim = mix(t.text, t.background, 0.5)
-  const sha = shortSha(c.name + c.headline)
-  const s = o.scale
-  const head = blockTop(c.headline, { font: f.display, maxWidth: W - x - 80, maxLines: 3, max: 66 * s, min: 32, lineHeight: 1.04, tracking: -0.035, top: 268, maxHeight: 200 })
-  const desc = blockTop(c.description, { font: f.body, maxWidth: W - x - 120, maxLines: 2, max: 22, min: 17, lineHeight: 1.4, top: head.bottom + 22 })
-  const mainX = 128
-  const featX = 184
-  const headY = 128
-  const pills: { text: string; fill: boolean }[] = [{ text: 'HEAD -> main', fill: true }]
-  if (c.badge) pills.push({ text: `tag: ${c.badge}`, fill: false })
-  pills.push({ text: 'origin/main', fill: false })
-  let px = x + measure(`commit ${sha}`, f.mono, 22) + 20
+function IsoCard({ x, y, label, sub, t, f, glow }: { x: number; y: number; label: string; sub: string; t: TemplateProps['theme']; f: TemplateProps['fonts']; glow: string }) {
+  const w = 300
+  const h = 120
+  return (
+    <g transform={`matrix(0.866 0.5 -0.866 0.5 ${x} ${y})`}>
+      <rect x={6} y={10} width={w} height={h} rx={14} fill="#000000" opacity={0.35} />
+      <rect x={0} y={0} width={w} height={h} rx={14} fill={mix(t.background, '#ffffff', 0.06)} stroke={mix(t.background, '#ffffff', 0.18)} />
+      <circle cx={30} cy={36} r={7} fill={glow} />
+      <Text x={48} y={43} lines={ellipsize(label, f.body, 20, w - 70)} font={f.body} size={20} fill={t.text} />
+      <Text x={26} y={90} lines={ellipsize(sub, f.mono, 13, w - 50)} font={f.mono} size={13} fill={t.text} opacity={0.45} />
+    </g>
+  )
+}
+
+function GitCommit({ content: c, theme: t, options: o, fonts: f, assets, uid }: TemplateProps) {
+  const M = 72
+  const head = blockBottom(caps(c.headline), { font: f.display, maxWidth: 560, maxLines: 4, max: 64 * o.scale, min: 30, lineHeight: 1.02, tracking: -0.01, bottom: 548, maxHeight: 330 })
+  const cards = [
+    { x: 760, y: 70, label: c.name || 'app', sub: c.domain || 'production' },
+    { x: 1010, y: 250, label: c.category || 'service', sub: c.badge || 'deployed' },
+    { x: 760, y: 380, label: 'main', sub: c.date || 'latest' },
+  ]
   return (
     <Frame background={t.background}>
-      <line x1={mainX} x2={mainX} y1={0} y2={H} stroke={t.text} strokeOpacity={0.18} strokeWidth={3} />
-      <path d={`M ${mainX} ${H - 40} C ${mainX} ${H - 110}, ${featX} ${H - 110}, ${featX} ${H - 170} L ${featX} ${headY + 120} C ${featX} ${headY + 60}, ${mainX} ${headY + 60}, ${mainX} ${headY}`} fill="none" stroke={t.primary} strokeWidth={3} strokeOpacity={0.85} />
-      {[H - 40, 470, 350].map((y) => (
-        <circle key={y} cx={mainX} cy={y} r={8} fill={t.background} stroke={t.text} strokeOpacity={0.45} strokeWidth={3} />
+      <defs>
+        <radialGradient id={`${uid}-glow`} cx="0.72" cy="0.45" r="0.6">
+          <stop offset="0" stopColor={t.accent} stopOpacity={0.22} />
+          <stop offset="1" stopColor={t.accent} stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <rect width={1200} height={630} fill={`url(#${uid}-glow)`} />
+      <path d="M 790 230 C 900 300, 980 300, 1010 330 M 1010 400 C 960 470, 880 470, 800 520" fill="none" stroke={t.accent} strokeWidth={2} strokeDasharray="6 8" strokeOpacity={0.8} />
+      {cards.map((cd, i) => (
+        <IsoCard key={i} {...cd} t={t} f={f} glow={i === 1 ? t.primary : t.accent} />
       ))}
-      {[headY + 230, headY + 140].map((y) => (
-        <circle key={y} cx={featX} cy={y} r={8} fill={t.background} stroke={t.primary} strokeWidth={3} />
-      ))}
-      <circle cx={mainX} cy={headY} r={22} fill={t.accent} fillOpacity={0.18} />
-      <circle cx={mainX} cy={headY} r={11} fill={t.accent} />
-      <Spans x={x} y={headY + 8} size={22} font={f.mono} fill={t.text} parts={[{ text: 'commit ', fill: dim }, { text: sha, fill: t.accent }]} />
-      {pills.map((p) => {
-        const pw = measure(p.text, f.mono, 15) + 24
-        const node = (
-          <g key={p.text}>
-            <rect x={px} y={headY - 14} width={pw} height={30} rx={15} fill={p.fill ? t.accent : 'none'} stroke={p.fill ? 'none' : dim} strokeOpacity={0.6} />
-            <Text x={px + 12} y={headY + 6} lines={p.text} font={f.mono} size={15} fill={p.fill ? t.background : t.text} />
-          </g>
-        )
-        px += pw + 10
-        return px - 10 > W - 40 ? null : node
-      })}
-      {o.showMeta ? (
-        <g>
-          <Spans x={x} y={headY + 56} size={18} font={f.mono} fill={t.text} parts={[{ text: 'Author: ', fill: dim }, { text: c.author || c.name }]} />
-          <Spans x={x} y={headY + 86} size={18} font={f.mono} fill={t.text} parts={[{ text: 'Date:   ', fill: dim }, { text: c.date }]} />
-        </g>
-      ) : null}
-      <Text x={x - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.035} fill={t.text} />
-      <BlockText b={desc} x={x} font={f.body} fill={dim} />
-      {o.showBrand ? (
-        <Spans x={x} y={H - 44} size={16} font={f.mono} fill={dim} parts={[{ text: c.name, fill: t.text }, { text: c.domain ? `  ·  ${c.domain}` : '' }]} />
-      ) : null}
+      {o.showBrand ? <Brand x={M} y={66} size={38} assets={assets} name={c.name} uid={uid} font={f.body} fill={t.text} bg={t.background} shape="circle" /> : null}
+      <Text x={M - 3} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.01} fill={t.text} />
     </Frame>
   )
 }
@@ -67,15 +53,15 @@ export const gitCommit: TemplateDef = {
   number: 8,
   name: 'Git Commit',
   collection: 'developer',
-  description: 'A commit log entry with branch graph, ref labels, author line and your headline as the message.',
+  description: 'Infrastructure energy: bold capitals beside isometric service cards wired together on deep indigo.',
   fonts: {
-    display: { family: 'Geist', weight: 600 },
-    body: { family: 'Geist', weight: 400 },
+    display: { family: 'Inter Tight', weight: 800 },
+    body: { family: 'Inter Tight', weight: 500 },
     mono: { family: 'Geist Mono', weight: 400 },
   },
-  theme: { primary: '#6ea8fe', accent: '#ffb547', background: '#0e0f11', text: '#ecebe7' },
-  limits: { headline: 60, description: 100 },
-  uses: ['author', 'date', 'badge'],
+  theme: { primary: '#ff5c7a', accent: '#a78bfa', background: '#13111c', text: '#ffffff' },
+  limits: { headline: 40 },
+  uses: ['logo', 'category', 'badge', 'date'],
   render: GitCommit,
 }
 

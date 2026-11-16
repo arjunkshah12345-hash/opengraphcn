@@ -1,71 +1,44 @@
-import { BlockText, blockTop, caps } from '../core/kit'
-import { Frame, Grain, Text } from '../core/primitives'
+import { blockTop, Brand, ribbonPaths } from '../core/kit'
+import { Frame, Text } from '../core/primitives'
 import type { TemplateDef, TemplateProps } from '../core/types'
-import { mix, r2 } from '../core/utils'
+import { hueShift } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
-
-const W = 1200
-/** smooth closed/open path through points using Catmull-Rom → cubic Bézier */
-function smooth(points: [number, number][], closed = false) {
-  const p = closed ? [points[points.length - 1], ...points, points[0], points[1]] : [points[0], ...points, points[points.length - 1]]
-  let d = `M ${r2(p[1][0])} ${r2(p[1][1])}`
-  for (let i = 1; i < p.length - 2; i++) {
-    const [x0, y0] = p[i - 1]
-    const [x1, y1] = p[i]
-    const [x2, y2] = p[i + 1]
-    const [x3, y3] = p[i + 2]
-    d += ` C ${r2(x1 + (x2 - x0) / 6)} ${r2(y1 + (y2 - y0) / 6)}, ${r2(x2 - (x3 - x1) / 6)} ${r2(y2 - (y3 - y1) / 6)}, ${r2(x2)} ${r2(y2)}`
-  }
-  return closed ? d + ' Z' : d
-}
 
 /* ─────────────────────────── 12 · Liquid ─────────────────────────── */
 
-function Liquid({ content: c, theme: t, options: o, fonts: f, uid }: TemplateProps) {
-  const s = o.scale
-  const cols = [mix(t.primary, t.background, 0.45), t.primary, mix(t.primary, t.accent, 0.5), t.accent, mix(t.accent, '#ffffff', 0.35)]
-  const ribbons = cols.map((col, k) => {
-    const pts1: [number, number][] = []
-    const pts2: [number, number][] = []
-    for (let x = -60; x <= W + 60; x += 60) {
-      const base = 650 - k * 40 - Math.max(0, x - 520) * 0.5
-      const y1 = base + 26 * Math.sin(x / 170 + k * 1.3)
-      const th = 64 + 34 * Math.sin(x / 230 + k)
-      pts1.push([x, y1])
-      pts2.push([x, y1 + th])
-    }
-    const top = smooth(pts1)
-    const bottomPts = [...pts2].reverse()
-    const bot = smooth(bottomPts).replace(/^M/, 'L')
-    return { d: `${top} ${bot} Z`, hl: top, col, k }
-  })
-  const head = blockTop(c.headline, { font: f.display, maxWidth: 680, maxLines: 3, max: 76 * s, min: 34, lineHeight: 1.0, tracking: -0.03, top: 128, maxHeight: 190 })
-  const desc = blockTop(c.description, { font: f.mono, maxWidth: 560, maxLines: 2, max: 17, min: 14, lineHeight: 1.5, top: head.bottom + 26 })
+function Liquid({ content: c, theme: t, options: o, fonts: f, uid, assets }: TemplateProps) {
+  const M = 72
+  const head = blockTop(c.headline, { font: f.display, maxWidth: 560, maxLines: 4, max: 64 * o.scale, min: 30, lineHeight: 1.04, tracking: -0.035, top: 150, maxHeight: 300 })
+  const a = ribbonPaths({ n: 110, from: [520, 720], ctrl1: [700, 120], ctrl2: [980, 760], to: [1280, 80], spread: 520, twist: 1.8 })
+  const b = ribbonPaths({ n: 70, from: [600, -80], ctrl1: [860, 460], ctrl2: [1000, 40], to: [1300, 520], spread: 300, twist: 1.1 })
   return (
     <Frame background={t.background}>
       <defs>
-        {ribbons.map((r) => (
-          <linearGradient key={r.k} id={`${uid}-r${r.k}`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor={r.col} stopOpacity={0.2} />
-            <stop offset="0.55" stopColor={r.col} />
-            <stop offset="1" stopColor={mix(r.col, '#ffffff', 0.25)} />
-          </linearGradient>
-        ))}
-        <filter id={`${uid}-soft`} x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur stdDeviation={2} />
+        <linearGradient id={`${uid}-silk`} x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stopColor={hueShift(t.primary, -50)} />
+          <stop offset="0.35" stopColor={t.primary} />
+          <stop offset="0.7" stopColor={t.accent} />
+          <stop offset="1" stopColor={hueShift(t.accent, 35)} />
+        </linearGradient>
+        <filter id={`${uid}-bloom`} x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation={14} />
         </filter>
       </defs>
-      {ribbons.map((r) => (
-        <g key={r.k}>
-          <path d={r.d} fill={`url(#${uid}-r${r.k})`} opacity={0.92} />
-          <path d={r.hl} fill="none" stroke="#ffffff" strokeOpacity={0.35} strokeWidth={1.4} filter={`url(#${uid}-soft)`} transform="translate(0 6)" />
+      <g fill="none" stroke={`url(#${uid}-silk)`}>
+        <g filter={`url(#${uid}-bloom)`} opacity={0.6}>
+          {a.filter((_, i) => i % 6 === 0).map((d, i) => (
+            <path key={`g${i}`} d={d} strokeWidth={10} />
+          ))}
         </g>
-      ))}
-      <Grain uid={uid} opacity={0.12} blend="overlay" />
-      {o.showBrand ? <Text x={72} y={84} lines={caps(c.name)} font={f.mono} size={14} tracking={0.2} fill={t.text} /> : null}
-      <Text x={70} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.03} fill={t.text} />
-      <BlockText b={desc} x={72} font={f.mono} fill={t.text} opacity={0.7} />
-      {o.showMeta ? <Text x={W - 72} y={84} anchor="end" lines={caps(c.domain)} font={f.mono} size={14} tracking={0.2} fill={t.text} opacity={0.7} /> : null}
+        {b.map((d, i) => (
+          <path key={`b${i}`} d={d} strokeWidth={1.6} strokeOpacity={0.45} />
+        ))}
+        {a.map((d, i) => (
+          <path key={`a${i}`} d={d} strokeWidth={1.8} strokeOpacity={0.9} />
+        ))}
+      </g>
+      {o.showBrand ? <Brand x={M} y={66} size={38} assets={assets} name={c.name} uid={uid} font={f.label} fill={t.text} bg={t.background} /> : null}
+      <Text x={M - 3} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.035} fill={t.text} />
     </Frame>
   )
 }
@@ -75,13 +48,14 @@ export const liquid: TemplateDef = {
   number: 12,
   name: 'Liquid',
   collection: 'abstract',
-  description: 'Flowing, layered ribbons of colour with glossy highlights rising across a deep ground.',
+  description: 'A twisting silk ribbon of a hundred hairlines in violet and coral, glowing on deep purple.',
   fonts: {
-    display: { family: 'Syne', weight: 700 },
-    mono: { family: 'Geist Mono', weight: 400 },
+    display: { family: 'Inter Tight', weight: 500 },
+    label: { family: 'Inter Tight', weight: 600 },
   },
-  theme: { primary: '#1fc8a9', accent: '#d7f36b', background: '#061716', text: '#f2fbf6' },
-  limits: { headline: 56, description: 110 },
+  theme: { primary: '#8b3dff', accent: '#ff5fa2', background: '#14072e', text: '#ffffff' },
+  limits: { headline: 50 },
+  uses: ['logo'],
   render: Liquid,
 }
 

@@ -1,81 +1,45 @@
-import { BlockText, blockTop, caps, join } from '../core/kit'
-import { Frame, Grain, Img, Text } from '../core/primitives'
+import { blockTop, Brand, ribbonPaths } from '../core/kit'
+import { Frame, Text } from '../core/primitives'
 import { fitLine } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
-import { hash, mix, rng } from '../core/utils'
+import { hueShift } from '../core/utils'
 import { OgImage, type OgImageProps } from '../core/render'
 
-const W = 1200
 const H = 630
-/* ─────────────────────────── 05 · The Cover ─────────────────────────── */
-
-function Barcode({ x, y, w, h, seed, fill }: { x: number; y: number; w: number; h: number; seed: string; fill: string }) {
-  const rand = rng(hash(seed))
-  const bars: { x: number; w: number }[] = []
-  let cx = 0
-  while (cx < w) {
-    const bw = [1.5, 1.5, 3, 4.5][Math.floor(rand() * 4)]
-    if (rand() > 0.35) bars.push({ x: cx, w: bw })
-    cx += bw + [1.5, 3][Math.floor(rand() * 2)]
-  }
-  return (
-    <g>
-      {bars.map((b, i) => (
-        <rect key={i} x={x + b.x} y={y} width={b.w} height={h} fill={fill} />
-      ))}
-    </g>
-  )
-}
+/* ─────────────────────────── 05 · Cover ─────────────────────────── */
 
 function Cover({ content: c, theme: t, options: o, fonts: f, assets, uid }: TemplateProps) {
-  const M = 56
-  const px = 712
-  const s = o.scale
-  const mast = fitLine(c.name || 'Cover', f.display, 156, 60, px - M - 28, -0.045)
-  const head = blockTop(c.headline, { font: f.italic, maxWidth: px - M - 60, maxLines: 3, max: 62 * s, min: 32, lineHeight: 1.02, tracking: -0.015, top: 228, maxHeight: 200 })
-  const desc = blockTop(c.description, { font: f.label, maxWidth: px - M - 120, maxLines: 3, max: 19, min: 15, lineHeight: 1.4, top: head.bottom + 26 })
-  const img = assets.screenshot || assets.logo
-  const initial = (c.name || 'A').trim().slice(0, 1)
-  const cs = mix(t.primary, t.background, 0.0)
+  const split = 600
+  const x = split + 52
+  const head = blockTop(c.headline, { font: f.display, maxWidth: 500, maxLines: 4, max: 50 * o.scale, min: 28, lineHeight: 1.04, tracking: -0.025, top: 64, maxHeight: 230 })
+  const date = c.date ? fitLine(c.date, f.display, 44, 24, 480, -0.025) : null
+  const a = ribbonPaths({ n: 90, from: [-80, 600], ctrl1: [140, -40], ctrl2: [420, 820], to: [700, 60], spread: 420, twist: 1.6 })
+  const b = ribbonPaths({ n: 60, from: [-60, 120], ctrl1: [260, 560], ctrl2: [380, -120], to: [680, 520], spread: 260, twist: 0.9 })
   return (
     <Frame background={t.background}>
-      <Grain uid={uid} opacity={0.06} />
-      <rect x={px} y={0} width={W - px} height={H} fill={cs} />
-      {img ? (
-        <Img href={img} x={px} y={0} w={W - px} h={H} uid={uid} fit={assets.screenshot ? 'cover' : 'contain'} />
-      ) : (
-        <g>
-          <clipPath id={`${uid}-panel`}>
-            <rect x={px} y={0} width={W - px} height={H} />
-          </clipPath>
-          <g clipPath={`url(#${uid}-panel)`}>
-            {[300, 240, 180].map((r, i) => (
-              <circle key={r} cx={px + 300} cy={300} r={r} fill="none" stroke={t.accent} strokeOpacity={0.5 - i * 0.12} strokeWidth={1.4} />
-            ))}
-            <Text x={px + 290} y={560} anchor="middle" lines={initial} font={f.italic} size={720} fill={t.background} opacity={0.94} />
-            <circle cx={px + 392} cy={176} r={44} fill={t.accent} />
-          </g>
-        </g>
-      )}
-      <Text x={M} y={56} lines={caps(join([`The ${c.category || 'New'} Issue`, c.date], '   ·   '))} font={f.label2} size={13} tracking={0.24} fill={t.text} />
-      {o.showBrand ? <Text x={M - 6} y={182} lines={mast.text} font={f.display} size={mast.size} tracking={-0.045} fill={t.text} /> : null}
-      <line x1={M} x2={px - 36} y1={202} y2={202} stroke={t.text} strokeWidth={1} />
-      <Text x={M} y={head.y} lines={head.lines} font={f.italic} size={head.size} lh={head.lh} tracking={-0.015} fill={t.text} />
-      <BlockText b={desc} x={M} font={f.label} fill={t.text} opacity={0.75} />
-      {c.badge ? (
-        <g>
-          <circle cx={px} cy={486} r={66} fill={t.accent} />
-          <Text x={px} y={474} anchor="middle" lines="NEW" font={f.label2} size={13} tracking={0.22} fill={t.background} />
-          <Text x={px} y={512} anchor="middle" lines={fitLine(c.badge, f.display, 34, 16, 104).text} font={f.display} size={fitLine(c.badge, f.display, 34, 16, 104).size} fill={t.background} />
-        </g>
-      ) : null}
-      {o.showMeta ? (
-        <g>
-          <rect x={M - 8} y={530} width={168} height={70} fill={t.background} />
-          <Barcode x={M} y={540} w={150} h={42} seed={c.name + c.domain} fill={t.text} />
-          <Text x={M} y={596} lines={c.domain} font={f.label} size={11} tracking={0.3} fill={t.text} />
-        </g>
-      ) : null}
+      <defs>
+        <linearGradient id={`${uid}-silk`} x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stopColor={hueShift(t.primary, -40)} />
+          <stop offset="0.4" stopColor={t.primary} />
+          <stop offset="0.75" stopColor={t.accent} />
+          <stop offset="1" stopColor={hueShift(t.accent, 30)} />
+        </linearGradient>
+        <clipPath id={`${uid}-art`}>
+          <rect x={0} y={0} width={split} height={H} />
+        </clipPath>
+      </defs>
+      <rect x={0} y={0} width={split} height={H} fill="#ffffff" />
+      <g clipPath={`url(#${uid}-art)`} fill="none" stroke={`url(#${uid}-silk)`}>
+        {b.map((d, i) => (
+          <path key={`b${i}`} d={d} strokeWidth={2.2} strokeOpacity={0.55} />
+        ))}
+        {a.map((d, i) => (
+          <path key={`a${i}`} d={d} strokeWidth={2.4} strokeOpacity={0.85} />
+        ))}
+      </g>
+      <Text x={x - 2} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.025} fill={t.text} />
+      {date && o.showMeta ? <Text x={1200 - 64} y={360} anchor="end" lines={date.text} font={f.display} size={date.size} tracking={-0.025} fill={t.text} /> : null}
+      {o.showBrand ? <Brand x={x} y={530} size={42} assets={assets} name={c.name} uid={uid} font={f.label} fill={t.text} bg={t.background} /> : null}
     </Frame>
   )
 }
@@ -83,18 +47,16 @@ function Cover({ content: c, theme: t, options: o, fonts: f, assets, uid }: Temp
 export const cover: TemplateDef = {
   id: 'cover',
   number: 5,
-  name: 'The Cover',
+  name: 'Cover',
   collection: 'editorial',
-  description: 'Magazine cover: towering Didone masthead, italic cover line, sticker badge and a barcode.',
+  description: 'An event poster: a silk ribbon of hairlines on white beside a deep violet panel with the headline and date.',
   fonts: {
-    display: { family: 'Bodoni Moda', weight: 800 },
-    italic: { family: 'Bodoni Moda', weight: 500, style: 'italic' },
-    label: { family: 'Hanken Grotesk', weight: 400 },
-    label2: { family: 'Hanken Grotesk', weight: 700 },
+    display: { family: 'Inter Tight', weight: 500 },
+    label: { family: 'Inter Tight', weight: 600 },
   },
-  theme: { primary: '#1d2b4f', accent: '#e4442b', background: '#efe8dc', text: '#121212' },
-  limits: { headline: 60, description: 120 },
-  uses: ['screenshot', 'logo', 'badge', 'category', 'date'],
+  theme: { primary: '#7b3bff', accent: '#ff4f9a', background: '#2a0a5e', text: '#ffffff' },
+  limits: { headline: 60 },
+  uses: ['date', 'logo'],
   render: Cover,
 }
 

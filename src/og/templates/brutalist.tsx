@@ -18,15 +18,11 @@ function Brutalist({ content: c, theme: t, options: o, fonts: f }: TemplateProps
       <rect x={box.x} y={box.y} width={box.w} height={box.h} fill={t.accent} />
       <Text x={box.x + 28} y={box.y + 46} lines={descLines} font={f.monoBold} size={16} lh={1.45} fill={t.text} />
       <Arrow x={box.x + 50} y={box.y + box.h - 40} size={40} stroke={t.text} width={4} dir={45} />
-      <rect x={0} y={0} width={W} height={56} fill={t.text} />
-      {o.showBrand ? <Text x={36} y={36} lines={`[${caps(c.name)}]`} font={f.monoBold} size={17} fill={t.background} /> : null}
-      <Text x={W / 2} y={36} anchor="middle" lines={`/// ${caps(c.category)}`} font={f.monoBold} size={17} fill={t.background} />
-      {o.showMeta ? <Text x={W - 36} y={36} anchor="end" lines={caps(c.date)} font={f.monoBold} size={17} fill={t.background} /> : null}
       <Text x={32} y={head.y} lines={head.lines} font={f.display} size={head.size} lh={head.lh} tracking={-0.005} fill={t.text} />
-      {o.showMeta ? (
+      {o.showBrand ? (
         <g>
-          <Text x={36} y={H - 44} lines={caps(c.domain)} font={f.monoBold} size={22} fill={t.text} />
-          <rect x={36} y={H - 34} width={Math.min(measure(caps(c.domain), f.monoBold, 22), box.x - 80)} height={6} fill={t.text} />
+          <Text x={36} y={H - 44} lines={caps(c.name)} font={f.monoBold} size={22} fill={t.text} />
+          <rect x={36} y={H - 34} width={Math.min(measure(caps(c.name), f.monoBold, 22), box.x - 80)} height={6} fill={t.text} />
         </g>
       ) : null}
     </Frame>

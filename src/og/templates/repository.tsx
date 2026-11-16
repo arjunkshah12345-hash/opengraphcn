@@ -1,4 +1,4 @@
-import { BlockText, blockTop, Mark, Star } from '../core/kit'
+import { Blob, BlockText, blockTop, dotGridPath, Mark, Star } from '../core/kit'
 import { Frame, Img, Text } from '../core/primitives'
 import { ellipsize, fitLine, measure } from '../core/text'
 import type { TemplateDef, TemplateProps } from '../core/types'
@@ -25,10 +25,10 @@ function Repository({ content: c, theme: t, options: o, fonts: f, assets, uid }:
   const s = o.scale
   const owner = c.owner ? `${c.owner}/` : ''
   const total = `${owner}${c.name}`
-  const titleFit = fitLine(total, f.display, 60 * s, 30, 820, -0.03)
+  const titleFit = fitLine(total, f.display, 72 * s, 30, 820, -0.035)
   const ownerW = measure(owner, f.light, titleFit.size, -0.03)
   const main = c.description || c.headline
-  const desc = blockTop(main, { font: f.body, maxWidth: 800, maxLines: 3, max: 28, min: 20, lineHeight: 1.38, top: 210 })
+  const desc = blockTop(main, { font: f.body, maxWidth: 800, maxLines: 3, max: 30, min: 20, lineHeight: 1.38, top: 214 })
   const langColor = (c.language && LANGUAGE_COLORS[c.language]) || t.accent
   const stats: { icon: 'star' | 'fork' | 'lang'; text: string; label?: string }[] = []
   if (c.stars != null) stats.push({ icon: 'star', text: formatCount(c.stars), label: c.stars === 1 ? 'star' : 'stars' })
@@ -40,6 +40,8 @@ function Repository({ content: c, theme: t, options: o, fonts: f, assets, uid }:
   const gray = mix(t.text, t.background, 0.42)
   return (
     <Frame background={t.background}>
+      <path d={dotGridPath({ x: 20, y: 20, w: W - 40, h: H - 60, gap: 22, size: 1.4 })} fill={t.text} opacity={0.08} />
+      <Blob uid={uid} id="g" cx={W - 140} cy={60} rx={320} ry={220} fill={langColor} blur={110} opacity={0.32} />
       {titleFit.text === total && owner ? (
         <g>
           <Text x={M - 2} y={150} lines={owner} font={f.light} size={titleFit.size} tracking={-0.03} fill={gray} />
@@ -72,7 +74,7 @@ function Repository({ content: c, theme: t, options: o, fonts: f, assets, uid }:
         })}
       </g>
       {o.showMeta && c.domain ? <Text x={W - M} y={H - 110} anchor="end" lines={ellipsize(c.domain, f.mono, 18, Math.max(120, W - M - sx))} font={f.mono} size={18} fill={gray} /> : null}
-      <rect x={0} y={H - 18} width={W} height={18} fill={langColor} />
+      <rect x={0} y={H - 8} width={W} height={8} fill={langColor} />
     </Frame>
   )
 }
@@ -90,7 +92,7 @@ export const repository: TemplateDef = {
     stat: { family: 'Geist', weight: 600 },
     mono: { family: 'Geist Mono', weight: 400 },
   },
-  theme: { primary: '#1f2328', accent: '#0969da', background: '#ffffff', text: '#1f2328' },
+  theme: { primary: '#e6edf3', accent: '#4c8dff', background: '#0a0c10', text: '#e6edf3' },
   limits: { headline: 80, description: 140 },
   uses: ['avatar', 'logo', 'stars', 'language', 'category'],
   render: Repository,
